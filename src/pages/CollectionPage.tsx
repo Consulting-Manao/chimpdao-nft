@@ -18,7 +18,7 @@ interface TokenData {
 }
 
 export default function CollectionPage() {
-  const { collectionId } = useParams<{ collectionId: string }>();
+  const { contractId } = useParams<{ contractId: string }>();
   const navigate = useNavigate();
   
   const [collection, setCollection] = useState<Collection | null>(null);
@@ -27,17 +27,17 @@ export default function CollectionPage() {
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    if (!collectionId) return;
+    if (!contractId) return;
     
     // Try to find by slug first, then by contract ID
-    const found = getCollectionBySlug(collectionId) || getCollectionByContractId(collectionId);
+    const found = getCollectionBySlug(contractId) || getCollectionByContractId(contractId);
     setCollection(found || {
-      slug: collectionId,
-      name: `Collection ${collectionId.slice(0, 8)}...`,
-      contractId: collectionId,
+      slug: contractId,
+      name: `Collection ${contractId.slice(0, 8)}...`,
+      contractId: contractId,
       network: 'testnet',
     });
-  }, [collectionId]);
+  }, [contractId]);
 
   const loadToken = useCallback(async (tokenId: number, contractId: string, network: 'testnet' | 'mainnet') => {
     const cacheKey = getCacheKey(contractId, tokenId);

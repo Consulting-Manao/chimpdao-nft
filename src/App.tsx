@@ -19,7 +19,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/:collectionId" element={<CollectionPage />} />
+            <Route path="/:contractId" element={<CollectionPage />} />
             <Route path="/:contractId/:tokenId" element={<TokenPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
