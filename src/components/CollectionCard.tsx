@@ -1,0 +1,44 @@
+import { Collection } from '@/config/collections';
+
+interface CollectionCardProps {
+  collection: Collection;
+  previewImage?: string;
+  onClick?: () => void;
+}
+
+export function CollectionCard({ collection, previewImage, onClick }: CollectionCardProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="glass-card-hover w-full text-left overflow-hidden group"
+    >
+      <div className="aspect-video overflow-hidden bg-muted">
+        {previewImage ? (
+          <img
+            src={previewImage}
+            alt={collection.name}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-4xl text-muted-foreground">🖼</span>
+          </div>
+        )}
+      </div>
+      <div className="p-4 space-y-2">
+        <h3 className="text-lg font-semibold">{collection.name}</h3>
+        {collection.description && (
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {collection.description}
+          </p>
+        )}
+        <div className="flex items-center gap-2">
+          <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+            {collection.network}
+          </span>
+        </div>
+      </div>
+    </button>
+  );
+}
