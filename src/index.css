@@ -58,8 +58,18 @@
     @apply border-border;
   }
 
+  *:focus-visible {
+    outline: 2px solid hsl(200 100% 60%);
+    outline-offset: 2px;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
+  }
+
+  .animate-fade-in {
+    opacity: 0;
+    animation: fade-in 0.4s ease-out forwards;
   }
 }
 
