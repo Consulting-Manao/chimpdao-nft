@@ -4,7 +4,8 @@ import { ExternalLink } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { AttributeBadge } from '@/components/AttributeBadge';
 import { CopyButton } from '@/components/CopyButton';
-import { getCollectionByContractId } from '@/config/collections';
+import { ErrorState } from '@/components/ErrorState';
+import { getCollectionByContractId, getCollectionBySlug } from '@/config/collections';
 import { getTokenUri } from '@/services/stellar';
 import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
@@ -18,17 +19,27 @@ export default function TokenPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const collection = contractId ? getCollectionByContractId(contractId) : null;
-  const tokenIdNum = tokenId ? parseInt(tokenId, 10) : 0;
+  // Dual lookup: slug or contractId
+  const collection = contractId 
+    ? getCollectionBySlug(contractId) || getCollectionByContractId(contractId)
+    : null;
+  
+  const tokenIdNum = tokenId !== undefined ? parseInt(tokenId, 10) : NaN;
+
+  // Validate tokenId
+  const isValidTokenId = !isNaN(tokenIdNum) && tokenIdNum >= 0 && 
+    (collection ? tokenIdNum < collection.tokenCount : true);
 
   useEffect(() => {
-    if (!contractId || tokenId === undefined) return;
+    if (!contractId || !collection) return;
+    if (!isValidTokenId) return;
 
     const load = async () => {
       setLoading(true);
       setError(null);
 
-      const cacheKey = getCacheKey(contractId, tokenIdNum);
+      const actualContractId = collection.contractId;
+      const cacheKey = getCacheKey(actualContractId, tokenIdNum);
       const cached = getCached<{ metadata: NFTMetadata; imageUrl: string; ipfsUri: string }>(cacheKey);
 
       if (cached) {
@@ -40,7 +51,7 @@ export default function TokenPage() {
       }
 
       try {
-        const uri = await getTokenUri(contractId, tokenIdNum);
+        const uri = await getTokenUri(actualContractId, tokenIdNum);
         setIpfsUri(uri);
         
         const meta = await fetchNFTMetadata(uri);
@@ -51,14 +62,36 @@ export default function TokenPage() {
 
         setCache(cacheKey, { metadata: meta, imageUrl: imgUrl, ipfsUri: uri });
       } catch (err) {
-        setError(String(err));
+        setError(err instanceof Error ? err.message : 'Failed to load token');
       } finally {
         setLoading(false);
       }
     };
 
     load();
-  }, [contractId, tokenId, tokenIdNum, collection]);
+  }, [contractId, tokenIdNum, collection, isValidTokenId]);
+
+  // Collection not found
+  if (!collection) {
+    return (
+      <ErrorState
+        title="Collection not found"
+        message="The collection you're looking for doesn't exist."
+        action={{ label: "Go Home", to: "/" }}
+      />
+    );
+  }
+
+  // Invalid token ID
+  if (!isValidTokenId) {
+    return (
+      <ErrorState
+        title="Token not found"
+        message={`Token #${tokenId} doesn't exist in this collection.`}
+        action={{ label: "View Collection", to: `/${collection.slug}` }}
+      />
+    );
+  }
 
   if (loading) {
     return (
@@ -73,12 +106,11 @@ export default function TokenPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-6 max-w-5xl mx-auto">
-        <PageHeader title="Error" showBack />
-        <div className="glass-card p-6 text-center">
-          <p className="text-destructive">{error}</p>
-        </div>
-      </div>
+      <ErrorState
+        title="Error loading token"
+        message={error}
+        action={{ label: "View Collection", to: `/${collection.slug}` }}
+      />
     );
   }
 
@@ -137,7 +169,7 @@ export default function TokenPage() {
             <div className="space-y-2 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Contract</span>
-                <CopyButton value={contractId || ''} label={`${contractId?.slice(0, 8)}...${contractId?.slice(-4)}`} />
+                <CopyButton value={collection.contractId} label={`${collection.contractId.slice(0, 8)}...${collection.contractId.slice(-4)}`} />
               </div>
               
               <div className="flex items-center justify-between">
@@ -159,17 +191,15 @@ export default function TokenPage() {
                 </div>
               )}
 
-              {collection && (
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Collection</span>
-                  <Link
-                    to={`/${collection.slug}`}
-                    className="text-primary hover:underline"
-                  >
-                    {collection.name}
-                  </Link>
-                </div>
-              )}
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Collection</span>
+                <Link
+                  to={`/${collection.slug}`}
+                  className="text-primary hover:underline"
+                >
+                  {collection.name}
+                </Link>
+              </div>
             </div>
           </div>
         </div>

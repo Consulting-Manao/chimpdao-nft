@@ -17,9 +17,7 @@ export default function LandingPage() {
       const results = await Promise.allSettled(
         collections.map(async (collection) => {
           const uri = await getTokenUri(collection.contractId, 0);
-          console.log('Token URI for', collection.name, ':', uri);
           const metadata = await fetchNFTMetadata(uri);
-          console.log('Metadata for', collection.name, ':', metadata);
           return { contractId: collection.contractId, image: metadata.image };
         })
       );
