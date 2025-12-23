@@ -11,10 +11,10 @@ export default function LandingPage() {
   const [previews, setPreviews] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    // Load preview images for each collection (first token)
+    // Load preview images for each collection (token 0)
     collections.forEach(async (collection) => {
       try {
-        const uri = await getTokenUri(collection.contractId, 0, collection.network);
+        const uri = await getTokenUri(collection.contractId, 0);
         const metadata = await fetchNFTMetadata(uri);
         if (metadata.image) {
           setPreviews(prev => ({

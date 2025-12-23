@@ -3,7 +3,7 @@ export interface Collection {
   slug: string;
   name: string;
   contractId: string;
-  network: "testnet" | "mainnet";
+  tokenCount: number;
   description?: string;
 }
 
@@ -12,7 +12,7 @@ export const collections: Collection[] = [
     slug: "stellar-merch",
     name: "Stellar Merch",
     contractId: "CCKHNE3SOVW3OQRFEES6O2KGZMU2BTS2GT4SMLOWVOOLZ7D6IUTMVEKP",
-    network: "testnet",
+    tokenCount: 2,
     description: "Official Stellar merchandise NFT collection",
   },
 ];
