@@ -75,44 +75,44 @@
 
 @layer components {
   .glass-card {
-    background-color: hsl(230 20% 15% / 0.85);
+    background-color: hsl(230 20% 22%);
     backdrop-filter: blur(24px);
-    border: 1px solid hsl(230 15% 35%);
+    border: 1px solid hsl(230 15% 40%);
     border-radius: 0.5rem;
     box-shadow: 
-      0 4px 6px -1px hsl(0 0% 0% / 0.3),
-      0 2px 4px -2px hsl(0 0% 0% / 0.2),
-      inset 0 1px 0 0 hsl(230 15% 45% / 0.4);
+      0 4px 12px -2px hsl(0 0% 0% / 0.5),
+      0 2px 4px -2px hsl(0 0% 0% / 0.3),
+      inset 0 1px 0 0 hsl(230 15% 50% / 0.5);
   }
 
   .glass-card-hover {
-    background-color: hsl(230 20% 15% / 0.85);
+    background-color: hsl(230 20% 22%);
     backdrop-filter: blur(24px);
-    border: 1px solid hsl(230 15% 35%);
+    border: 1px solid hsl(230 15% 40%);
     border-radius: 0.5rem;
     box-shadow: 
-      0 4px 6px -1px hsl(0 0% 0% / 0.3),
-      0 2px 4px -2px hsl(0 0% 0% / 0.2),
-      inset 0 1px 0 0 hsl(230 15% 45% / 0.4);
+      0 4px 12px -2px hsl(0 0% 0% / 0.5),
+      0 2px 4px -2px hsl(0 0% 0% / 0.3),
+      inset 0 1px 0 0 hsl(230 15% 50% / 0.5);
     transition: all 0.3s ease;
   }
 
   .glass-card-hover:hover {
-    background-color: hsl(230 20% 18% / 0.95);
-    border-color: hsl(200 100% 60% / 0.5);
+    background-color: hsl(230 20% 26%);
+    border-color: hsl(200 100% 60% / 0.6);
     box-shadow: 
-      0 10px 25px -5px hsl(200 100% 60% / 0.15),
-      0 8px 10px -6px hsl(0 0% 0% / 0.3),
-      inset 0 1px 0 0 hsl(200 100% 60% / 0.25);
+      0 12px 30px -5px hsl(200 100% 60% / 0.2),
+      0 8px 16px -6px hsl(0 0% 0% / 0.4),
+      inset 0 1px 0 0 hsl(200 100% 60% / 0.3);
   }
 
   .glass-card-hover:focus-visible {
-    background-color: hsl(230 20% 18% / 0.95);
-    border-color: hsl(200 100% 60% / 0.5);
+    background-color: hsl(230 20% 26%);
+    border-color: hsl(200 100% 60% / 0.6);
     box-shadow: 
-      0 10px 25px -5px hsl(200 100% 60% / 0.15),
-      0 8px 10px -6px hsl(0 0% 0% / 0.3),
-      inset 0 1px 0 0 hsl(200 100% 60% / 0.25);
+      0 12px 30px -5px hsl(200 100% 60% / 0.2),
+      0 8px 16px -6px hsl(0 0% 0% / 0.4),
+      inset 0 1px 0 0 hsl(200 100% 60% / 0.3);
   }
 
   .sr-only {
