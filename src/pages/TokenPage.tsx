@@ -110,8 +110,8 @@ export default function TokenPage() {
     return (
       <div className="min-h-screen p-6 max-w-5xl mx-auto">
         <PageHeader title="Loading..." showBack />
-        <div className="glass-card aspect-square max-w-lg mx-auto animate-pulse">
-          <div className="w-full h-full bg-muted rounded-lg" />
+        <div className="glass-card overflow-hidden max-w-lg mx-auto">
+          <div className="aspect-square bg-muted animate-pulse" />
         </div>
       </div>
     );

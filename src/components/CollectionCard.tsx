@@ -15,7 +15,7 @@ export const CollectionCard = forwardRef<HTMLButtonElement, CollectionCardProps>
         onClick={onClick}
         className="glass-card-hover w-full text-left overflow-hidden group"
       >
-        <div className="aspect-video overflow-hidden bg-muted">
+        <div className="aspect-square overflow-hidden bg-muted">
           {previewImage ? (
             <img
               src={previewImage}

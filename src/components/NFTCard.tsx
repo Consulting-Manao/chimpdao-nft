@@ -11,8 +11,11 @@ interface NFTCardProps {
 export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick }: NFTCardProps) {
   if (isLoading) {
     return (
-      <div className="glass-card aspect-square animate-pulse">
-        <div className="w-full h-full bg-muted rounded-lg" />
+      <div className="glass-card overflow-hidden">
+        <div className="aspect-square bg-muted animate-pulse" />
+        <div className="p-3">
+          <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+        </div>
       </div>
     );
   }
