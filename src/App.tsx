@@ -2,10 +2,10 @@ import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import CollectionPage from "./pages/CollectionPage";
-import TokenPage from "./pages/TokenPage";
-import NotFound from "./pages/NotFound";
+import LandingPage from "@/pages/LandingPage";
+import CollectionPage from "@/pages/CollectionPage";
+import TokenPage from "@/pages/TokenPage";
+import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
