@@ -9,23 +9,32 @@ import { fetchNFTMetadata, ipfsToHttp } from '@/services/ipfs';
 export default function LandingPage() {
   const navigate = useNavigate();
   const [previews, setPreviews] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load preview images for each collection (token 0)
-    collections.forEach(async (collection) => {
-      try {
-        const uri = await getTokenUri(collection.contractId, 0);
-        const metadata = await fetchNFTMetadata(uri);
-        if (metadata.image) {
-          setPreviews(prev => ({
-            ...prev,
-            [collection.contractId]: ipfsToHttp(metadata.image!)
-          }));
+    const loadPreviews = async () => {
+      setLoading(true);
+      const results = await Promise.allSettled(
+        collections.map(async (collection) => {
+          const uri = await getTokenUri(collection.contractId, 0);
+          console.log('Token URI for', collection.name, ':', uri);
+          const metadata = await fetchNFTMetadata(uri);
+          console.log('Metadata for', collection.name, ':', metadata);
+          return { contractId: collection.contractId, image: metadata.image };
+        })
+      );
+      
+      const newPreviews: Record<string, string> = {};
+      results.forEach((result) => {
+        if (result.status === 'fulfilled' && result.value.image) {
+          newPreviews[result.value.contractId] = ipfsToHttp(result.value.image);
         }
-      } catch {
-        // Silently fail for preview
-      }
-    });
+      });
+      setPreviews(newPreviews);
+      setLoading(false);
+    };
+    
+    loadPreviews();
   }, []);
 
   return (
@@ -36,19 +45,25 @@ export default function LandingPage() {
       />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {collections.map((collection, idx) => (
-          <div
-            key={collection.contractId}
-            className="animate-fade-in"
-            style={{ animationDelay: `${idx * 100}ms` }}
-          >
-            <CollectionCard
-              collection={collection}
-              previewImage={previews[collection.contractId]}
-              onClick={() => navigate(`/${collection.slug}`)}
-            />
+        {loading ? (
+          <div className="col-span-full text-center py-12">
+            <p className="text-muted-foreground">Loading collections...</p>
           </div>
-        ))}
+        ) : (
+          collections.map((collection, idx) => (
+            <div
+              key={collection.contractId}
+              className="animate-fade-in"
+              style={{ animationDelay: `${idx * 100}ms` }}
+            >
+              <CollectionCard
+                collection={collection}
+                previewImage={previews[collection.contractId]}
+                onClick={() => navigate(`/${collection.slug}`)}
+              />
+            </div>
+          ))
+        )}
       </div>
 
       {collections.length === 0 && (
