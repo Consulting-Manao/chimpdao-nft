@@ -6,7 +6,7 @@ import { AttributeBadge } from '@/components/AttributeBadge';
 import { CopyButton } from '@/components/CopyButton';
 import { ErrorState } from '@/components/ErrorState';
 import { getCollectionByContractId, getCollectionBySlug } from '@/config/collections';
-import { getTokenUri } from '@/services/stellar';
+import { getTokenUri, getTokenOwner } from '@/services/stellar';
 import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
 
@@ -16,6 +16,8 @@ export default function TokenPage() {
   const [metadata, setMetadata] = useState<NFTMetadata | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [ipfsUri, setIpfsUri] = useState<string | null>(null);
+  const [owner, setOwner] = useState<string | null>(null);
+  const [ownerLoading, setOwnerLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,11 +36,13 @@ export default function TokenPage() {
     if (!contractId || !collection) return;
     if (!isValidTokenId) return;
 
-    const load = async () => {
+    const actualContractId = collection.contractId;
+
+    // Load metadata (cached)
+    const loadMetadata = async () => {
       setLoading(true);
       setError(null);
 
-      const actualContractId = collection.contractId;
       const cacheKey = getCacheKey(actualContractId, tokenIdNum);
       const cached = getCached<{ metadata: NFTMetadata; imageUrl: string; ipfsUri: string }>(cacheKey);
 
@@ -68,7 +72,16 @@ export default function TokenPage() {
       }
     };
 
-    load();
+    // Load owner (not cached - can change)
+    const loadOwner = async () => {
+      setOwnerLoading(true);
+      const ownerAddress = await getTokenOwner(actualContractId, tokenIdNum);
+      setOwner(ownerAddress);
+      setOwnerLoading(false);
+    };
+
+    loadMetadata();
+    loadOwner();
   }, [contractId, tokenIdNum, collection, isValidTokenId]);
 
   // Collection not found
@@ -175,6 +188,17 @@ export default function TokenPage() {
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Token ID</span>
                 <span className="font-mono">{tokenId}</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Owner</span>
+                {ownerLoading ? (
+                  <span className="text-muted-foreground text-xs">Loading...</span>
+                ) : owner ? (
+                  <CopyButton value={owner} label={`${owner.slice(0, 8)}...${owner.slice(-4)}`} />
+                ) : (
+                  <span className="text-muted-foreground">No owner</span>
+                )}
               </div>
 
               {ipfsUri && (

@@ -36,3 +36,42 @@ export async function getTokenUri(
   const resultValue = response.result.retval;
   return scValToNative(resultValue) as string;
 }
+
+export async function getTokenOwner(
+  contractId: string,
+  tokenId: number,
+  network: Network = defaultNetwork
+): Promise<string | null> {
+  const rpcUrl = getRpcUrl(network);
+  const server = new rpc.Server(rpcUrl);
+  
+  const sourceKeypair = Keypair.random();
+  const sourceAccount = new Account(sourceKeypair.publicKey(), '0');
+  
+  const contract = new Contract(contractId);
+  
+  const tx = new TransactionBuilder(sourceAccount, {
+    fee: '100',
+    networkPassphrase: getNetworkPassphrase(network),
+  })
+    .addOperation(contract.call('owner_of', nativeToScVal(tokenId, { type: 'u64' })))
+    .setTimeout(30)
+    .build();
+  
+  try {
+    const response = await server.simulateTransaction(tx);
+    
+    if (rpc.Api.isSimulationError(response)) {
+      return null;
+    }
+    
+    if (!('result' in response) || !response.result) {
+      return null;
+    }
+    
+    const resultValue = response.result.retval;
+    return scValToNative(resultValue) as string;
+  } catch {
+    return null;
+  }
+}
