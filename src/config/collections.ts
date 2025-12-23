@@ -12,8 +12,15 @@ export const collections: Collection[] = [
     slug: "pudgy",
     name: "Pudgy Penguin",
     contractId: "CCKHNE3SOVW3OQRFEES6O2KGZMU2BTS2GT4SMLOWVOOLZ7D6IUTMVEKP",
-    tokenCount: 2,
+    tokenCount: 10,
     description: "Pudgy Penguin NFT collection",
+  },
+  {
+    slug: "pudgy-2",
+    name: "Pudgy Penguin 2",
+    contractId: "CCKHNE3SOVW3OQRFEES6O2KGZMU2BTS2GT4SMLOWVOOLZ7D6IUTMVEKP",
+    tokenCount: 5,
+    description: "Pudgy Penguin NFT collection 2",
   },
 ];
 
