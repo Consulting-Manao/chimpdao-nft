@@ -19,7 +19,7 @@ export async function getTokenUri(
     fee: '100',
     networkPassphrase: getNetworkPassphrase(network),
   })
-    .addOperation(contract.call('token_uri', nativeToScVal(tokenId, { type: 'u32' })))
+    .addOperation(contract.call('token_uri', nativeToScVal(tokenId, { type: 'u64' })))
     .setTimeout(30)
     .build();
   
