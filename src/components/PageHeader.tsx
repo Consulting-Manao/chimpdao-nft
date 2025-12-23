@@ -16,8 +16,9 @@ export function PageHeader({ title, subtitle, showBack }: PageHeaderProps) {
         <button
           onClick={() => navigate(-1)}
           className="mb-4 inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Go back to previous page"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           <span className="text-sm">Back</span>
         </button>
       )}

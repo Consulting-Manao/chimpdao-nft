@@ -36,7 +36,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto">
+    <main id="main-content" className="min-h-screen p-6 max-w-7xl mx-auto">
       <PageHeader
         title="ChimpDAO"
         subtitle="Explore the NFT collections"
@@ -44,7 +44,7 @@ export default function LandingPage() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
-          <div className="col-span-full text-center py-12">
+          <div className="col-span-full text-center py-12" role="status" aria-label="Loading collections">
             <p className="text-muted-foreground">Loading collections...</p>
           </div>
         ) : (
@@ -69,6 +69,6 @@ export default function LandingPage() {
           <p className="text-muted-foreground">No collections configured</p>
         </div>
       )}
-    </div>
+    </main>
   );
 }
