@@ -40,8 +40,7 @@ export default function TokenPage() {
       }
 
       try {
-        const network = collection?.network || 'testnet';
-        const uri = await getTokenUri(contractId, tokenIdNum, network);
+        const uri = await getTokenUri(contractId, tokenIdNum);
         setIpfsUri(uri);
         
         const meta = await fetchNFTMetadata(uri);
