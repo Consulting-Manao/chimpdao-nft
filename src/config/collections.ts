@@ -9,11 +9,11 @@ export interface Collection {
 
 export const collections: Collection[] = [
   {
-    slug: "stellar-merch",
-    name: "Stellar Merch",
+    slug: "pudgy",
+    name: "Pudgy Penguin",
     contractId: "CCKHNE3SOVW3OQRFEES6O2KGZMU2BTS2GT4SMLOWVOOLZ7D6IUTMVEKP",
     tokenCount: 2,
-    description: "Official Stellar merchandise NFT collection",
+    description: "Pudgy Penguin NFT collection",
   },
 ];
 

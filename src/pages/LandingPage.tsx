@@ -38,8 +38,8 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen p-6 max-w-7xl mx-auto">
       <PageHeader
-        title="NFT Collections"
-        subtitle="Explore Stellar NFT collections"
+        title="ChimpDAO"
+        subtitle="Explore the NFT collections"
       />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
