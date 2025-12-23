@@ -64,7 +64,11 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply text-foreground antialiased;
+    background: 
+      radial-gradient(ellipse at top, hsl(230 30% 15% / 0.4) 0%, transparent 50%),
+      linear-gradient(180deg, hsl(230 25% 6%) 0%, hsl(230 25% 10%) 100%);
+    min-height: 100vh;
   }
 
   .animate-fade-in {
