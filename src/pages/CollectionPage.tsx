@@ -96,19 +96,23 @@ export default function CollectionPage() {
 
   if (loading || !collection) {
     return (
-      <div className="min-h-screen p-6 max-w-7xl mx-auto">
+      <main id="main-content" className="min-h-screen p-6 max-w-7xl mx-auto">
         <PageHeader title="Loading..." showBack />
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div 
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+          role="status"
+          aria-label="Loading collection"
+        >
           {[...Array(4)].map((_, i) => (
             <div key={i} className="glass-card aspect-square animate-pulse" />
           ))}
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto">
+    <main id="main-content" className="min-h-screen p-6 max-w-7xl mx-auto">
       <PageHeader
         title={collection.name}
         subtitle={collection.description}
@@ -132,6 +136,6 @@ export default function CollectionPage() {
           </div>
         ))}
       </div>
-    </div>
+    </main>
   );
 }

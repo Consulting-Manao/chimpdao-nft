@@ -108,12 +108,16 @@ export default function TokenPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-6 max-w-5xl mx-auto">
+      <main id="main-content" className="min-h-screen p-6 max-w-5xl mx-auto">
         <PageHeader title="Loading..." showBack />
-        <div className="glass-card overflow-hidden max-w-lg mx-auto">
+        <div 
+          className="glass-card overflow-hidden max-w-lg mx-auto"
+          role="status"
+          aria-label="Loading token details"
+        >
           <div className="aspect-square bg-muted animate-pulse" />
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -128,7 +132,7 @@ export default function TokenPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-5xl mx-auto">
+    <main id="main-content" className="min-h-screen p-6 max-w-5xl mx-auto">
       <PageHeader
         title={metadata?.name || `Token #${tokenId}`}
         showBack
@@ -144,7 +148,7 @@ export default function TokenPage() {
               className="w-full h-auto"
             />
           ) : (
-            <div className="aspect-square flex items-center justify-center bg-muted">
+            <div className="aspect-square flex items-center justify-center bg-muted" aria-hidden="true">
               <span className="text-muted-foreground">No image</span>
             </div>
           )}
@@ -154,15 +158,15 @@ export default function TokenPage() {
         <div className="space-y-6">
           {metadata?.description && (
             <div className="glass-card p-4">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Description</h3>
+              <h2 className="text-sm font-medium text-muted-foreground mb-2">Description</h2>
               <p className="text-sm">{metadata.description}</p>
             </div>
           )}
 
           {/* Attributes */}
           {metadata?.attributes && metadata.attributes.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">Attributes</h3>
+            <section aria-labelledby="attributes-heading">
+              <h2 id="attributes-heading" className="text-sm font-medium text-muted-foreground mb-3">Attributes</h2>
               <div className="grid grid-cols-2 gap-3">
                 {metadata.attributes.map((attr, idx) => (
                   <AttributeBadge
@@ -172,62 +176,71 @@ export default function TokenPage() {
                   />
                 ))}
               </div>
-            </div>
+            </section>
           )}
 
           {/* Technical Info */}
           <div className="glass-card p-4 space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">Details</h3>
+            <h2 className="text-sm font-medium text-muted-foreground">Details</h2>
             
-            <div className="space-y-2 text-sm">
+            <dl className="space-y-2 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Contract</span>
-                <CopyButton value={collection.contractId} label={`${collection.contractId.slice(0, 8)}...${collection.contractId.slice(-4)}`} />
+                <dt className="text-muted-foreground">Contract</dt>
+                <dd>
+                  <CopyButton value={collection.contractId} label={`${collection.contractId.slice(0, 8)}...${collection.contractId.slice(-4)}`} />
+                </dd>
               </div>
               
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Token ID</span>
-                <span className="font-mono">{tokenId}</span>
+                <dt className="text-muted-foreground">Token ID</dt>
+                <dd className="font-mono">{tokenId}</dd>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Owner</span>
-                {ownerLoading ? (
-                  <span className="text-muted-foreground text-xs">Loading...</span>
-                ) : owner ? (
-                  <CopyButton value={owner} label={`${owner.slice(0, 8)}...${owner.slice(-4)}`} />
-                ) : (
-                  <span className="text-muted-foreground">No owner</span>
-                )}
+                <dt className="text-muted-foreground">Owner</dt>
+                <dd>
+                  {ownerLoading ? (
+                    <span className="text-muted-foreground text-xs">Loading...</span>
+                  ) : owner ? (
+                    <CopyButton value={owner} label={`${owner.slice(0, 8)}...${owner.slice(-4)}`} />
+                  ) : (
+                    <span className="text-muted-foreground">No owner</span>
+                  )}
+                </dd>
               </div>
 
               {ipfsUri && (
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">IPFS</span>
-                  <a
-                    href={ipfsToHttp(ipfsUri)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-primary hover:underline"
-                  >
-                    View <ExternalLink className="h-3 w-3" />
-                  </a>
+                  <dt className="text-muted-foreground">IPFS</dt>
+                  <dd>
+                    <a
+                      href={ipfsToHttp(ipfsUri)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-primary hover:underline"
+                      aria-label="View metadata on IPFS (opens in new tab)"
+                    >
+                      View <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                    </a>
+                  </dd>
                 </div>
               )}
 
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Collection</span>
-                <Link
-                  to={`/${collection.slug}`}
-                  className="text-primary hover:underline"
-                >
-                  {collection.name}
-                </Link>
+                <dt className="text-muted-foreground">Collection</dt>
+                <dd>
+                  <Link
+                    to={`/${collection.slug}`}
+                    className="text-primary hover:underline"
+                  >
+                    {collection.name}
+                  </Link>
+                </dd>
               </div>
-            </div>
+            </dl>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -9,9 +9,11 @@ interface NFTCardProps {
 }
 
 export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick }: NFTCardProps) {
+  const name = metadata?.name || `Token #${tokenId}`;
+
   if (isLoading) {
     return (
-      <div className="glass-card overflow-hidden">
+      <div className="glass-card overflow-hidden" role="status" aria-label="Loading token">
         <div className="aspect-square bg-muted animate-pulse" />
         <div className="p-3">
           <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
@@ -24,25 +26,24 @@ export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick }: NFT
     <button
       onClick={onClick}
       className="glass-card-hover w-full text-left overflow-hidden group"
+      aria-label={`View details for ${name}`}
     >
       <div className="aspect-square overflow-hidden">
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt={metadata?.name || `Token #${tokenId}`}
+            alt={name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
+          <div className="w-full h-full bg-muted flex items-center justify-center" aria-hidden="true">
             <span className="text-muted-foreground">#{tokenId}</span>
           </div>
         )}
       </div>
       <div className="p-3">
-        <p className="text-sm font-medium truncate">
-          {metadata?.name || `Token #${tokenId}`}
-        </p>
+        <p className="text-sm font-medium truncate">{name}</p>
       </div>
     </button>
   );

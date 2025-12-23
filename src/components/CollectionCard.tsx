@@ -14,17 +14,18 @@ export const CollectionCard = forwardRef<HTMLButtonElement, CollectionCardProps>
         ref={ref}
         onClick={onClick}
         className="glass-card-hover w-full text-left overflow-hidden group"
+        aria-label={`View ${collection.name} collection`}
       >
         <div className="aspect-square overflow-hidden bg-muted">
           {previewImage ? (
             <img
               src={previewImage}
-              alt={collection.name}
+              alt={`Preview image from ${collection.name} collection`}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center" aria-hidden="true">
               <span className="text-muted-foreground text-sm">No image</span>
             </div>
           )}
