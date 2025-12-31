@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "@/pages/LandingPage";
 import CollectionPage from "@/pages/CollectionPage";
 import TokenPage from "@/pages/TokenPage";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/:contractId" element={<CollectionPage />} />
             <Route path="/:contractId/:tokenId" element={<TokenPage />} />
             <Route path="*" element={<NotFound />} />
