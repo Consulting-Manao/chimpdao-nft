@@ -1,5 +1,25 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Shield, Mail, Building2, Scale } from "lucide-react";
+
+const Section = ({ title, id, children }: { title: string; id: string; children: React.ReactNode }) => (
+  <section id={id} className="mb-12">
+    <h2 className="text-2xl font-semibold text-foreground mb-4 pb-2 border-b border-border/50">{title}</h2>
+    <div className="space-y-4 text-muted-foreground">{children}</div>
+  </section>
+);
+
+const SubSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <div className="mb-6">
+    <h3 className="text-lg font-medium text-foreground/90 mb-3">{title}</h3>
+    <div className="space-y-3 text-muted-foreground">{children}</div>
+  </div>
+);
+
+const InfoBox = ({ children, variant = "default" }: { children: React.ReactNode; variant?: "default" | "important" }) => (
+  <div className={`p-4 rounded-lg border ${variant === "important" ? "bg-primary/5 border-primary/20" : "bg-muted/30 border-border/50"}`}>
+    {children}
+  </div>
+);
 
 const PrivacyPolicy = () => {
   return (
@@ -13,427 +33,304 @@ const PrivacyPolicy = () => {
           Back to Home
         </Link>
 
-        <article className="prose prose-invert prose-lg max-w-none">
-          <h1 className="text-4xl font-bold mb-2">Privacy Policy - Chimp</h1>
+        {/* Header */}
+        <header className="mb-12">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 rounded-xl bg-primary/10">
+              <Shield className="w-8 h-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold text-foreground">Privacy Policy</h1>
+              <p className="text-lg text-muted-foreground">Chimp iOS Application</p>
+            </div>
+          </div>
+          <div className="flex gap-4 text-sm text-muted-foreground">
+            <span>Last Updated: January 2026</span>
+            <span>•</span>
+            <span>Effective: January 2026</span>
+          </div>
+        </header>
 
-          <p className="text-muted-foreground">
-            <strong>Last Updated: January 2026</strong>
-            <br />
-            <strong>Effective: January 2026</strong>
+        {/* Introduction Card */}
+        <div className="glass-card p-6 mb-12 space-y-4">
+          <p className="text-foreground/90">
+            Consulting Manao GmbH ("Company", "we", "us") operates the Chimp iOS application ("App", "Service") for the Stellar Merch Shop platform. We are committed to protecting your privacy and ensuring transparency about how we collect, use, and protect your personal data in accordance with the <strong>General Data Protection Regulation (GDPR)</strong> and Austrian data protection laws.
           </p>
+          
+          <InfoBox variant="important">
+            <p className="font-medium text-foreground mb-2">Minimal Data Collection</p>
+            <p className="text-sm">Our App involves minimal personal data collection. We do not operate backend servers or databases. All user data is stored locally on your device (iOS Keychain and UserDefaults) or on-chain (Stellar blockchain). We do not use analytics, tracking, or third-party data collection services.</p>
+          </InfoBox>
 
-          <h2>1. Introduction</h2>
-          <p>
-            Consulting Manao GmbH ("Company", "we", "us") operates the Chimp iOS application ("App", "Service") for the Stellar Merch Shop platform. We are committed to protecting your privacy and ensuring transparency about how we collect, use, and protect your personal data in accordance with the General Data Protection Regulation (GDPR) and Austrian data protection laws.
-          </p>
-          <p>
-            <strong>Minimal Data Collection</strong>: Our App involves minimal personal data collection. We do not operate backend servers or databases. All user data is stored locally on your device (iOS Keychain and UserDefaults) or on-chain (Stellar blockchain). We do not use analytics, tracking, or third-party data collection services.
-          </p>
-          <p>
-            <strong>Contact Information</strong>:
-            <br />
-            Consulting Manao GmbH
-            <br />
-            FN 571029z
-            <br />
-            Email: <a href="mailto:legal@consulting-manao.com" className="text-primary hover:underline">legal@consulting-manao.com</a>
-          </p>
+          <div className="flex flex-col sm:flex-row gap-4 pt-2">
+            <div className="flex items-center gap-2 text-sm">
+              <Building2 className="w-4 h-4 text-primary" />
+              <span>Consulting Manao GmbH • FN 571029z</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Mail className="w-4 h-4 text-primary" />
+              <a href="mailto:legal@consulting-manao.com" className="text-primary hover:underline">legal@consulting-manao.com</a>
+            </div>
+          </div>
+        </div>
 
-          <h2>2. Data Controller</h2>
-          <p>
-            Consulting Manao GmbH is the data controller responsible for processing your personal data in connection with the Chimp App.
-          </p>
+        {/* Main Content */}
+        <div className="space-y-8">
+          <Section title="2. Data Controller" id="data-controller">
+            <p>Consulting Manao GmbH is the data controller responsible for processing your personal data in connection with the Chimp App.</p>
+          </Section>
 
-          <h2>3. Types of Data We Collect</h2>
-          <p>
-            <strong>Important</strong>: We do not operate backend servers or databases. All data is either:
-          </p>
-          <ul>
-            <li>Stored locally on your device using iOS Keychain (encrypted, device-only) or UserDefaults (local preferences)</li>
-            <li>Stored on-chain via the Stellar blockchain (publicly visible and permanent)</li>
-            <li>Stored on decentralized IPFS networks (publicly accessible for NFT metadata)</li>
-          </ul>
+          <Section title="3. Types of Data We Collect" id="data-types">
+            <InfoBox>
+              <p className="font-medium text-foreground mb-2">Important</p>
+              <p className="text-sm">We do not operate backend servers or databases. All data is either stored locally on your device, on-chain via the Stellar blockchain, or on decentralized IPFS networks.</p>
+            </InfoBox>
 
-          <h3>3.1 Data You Provide Directly</h3>
-          <p><strong>Wallet Information</strong>:</p>
-          <ul>
-            <li>Stellar wallet private keys (stored in iOS Keychain, encrypted, device-only)</li>
-            <li>Stellar wallet public addresses (stored in UserDefaults, local device storage)</li>
-            <li>Wallet connection preferences</li>
-          </ul>
-          <p><strong>App Configuration</strong>:</p>
-          <ul>
-            <li>Network selection (testnet/mainnet)</li>
-            <li>Contract ID preferences</li>
-            <li>Admin mode settings (if applicable)</li>
-          </ul>
-          <p>
-            <strong>User Responsibility</strong>: You are responsible for ensuring your wallet keys are kept secure. We do not have access to your private keys, which are stored exclusively in your device's Keychain.
-          </p>
-
-          <h3>3.2 Data Collected Automatically</h3>
-          <p><strong>Blockchain Data</strong> (publicly visible on Stellar Network):</p>
-          <ul>
-            <li>Transaction hashes and timestamps</li>
-            <li>Smart contract interaction data</li>
-            <li>NFT ownership records</li>
-            <li>Token transfer history</li>
-          </ul>
-          <p><strong>NFC Chip Data</strong> (read only, not stored):</p>
-          <ul>
-            <li>Chip public keys (read from NFC chips for authentication)</li>
-            <li>Contract IDs embedded in NFC chips</li>
-            <li>Token IDs associated with chips</li>
-          </ul>
-          <p><strong>Technical Data</strong>:</p>
-          <ul>
-            <li><strong>Device Information</strong>: iOS version, device model (collected by Apple App Store for distribution)</li>
-            <li><strong>App Usage</strong>: No analytics or tracking. We do not collect usage patterns or user behavior data.</li>
-          </ul>
-          <p><strong>Local Storage</strong> (stored on your device only):</p>
-          <ul>
-            <li><strong>iOS Keychain</strong>: Private keys stored with <code>kSecAttrAccessibleWhenUnlockedThisDeviceOnly</code> (encrypted, device-only, never synced)</li>
-            <li><strong>UserDefaults</strong>: Wallet addresses, network preferences, contract IDs (local device storage, cleared when app is deleted)</li>
-          </ul>
-          <p><strong>IPFS Data</strong> (publicly accessible):</p>
-          <ul>
-            <li>NFT metadata and images fetched from IPFS networks</li>
-            <li>Content Identifiers (CIDs) for NFT content</li>
-            <li>Content metadata and timestamps</li>
-          </ul>
-
-          <h3>3.3 Data from Third-Party Services</h3>
-          <p><strong>Stellar Network</strong>:</p>
-          <ul>
-            <li>Account balances and transaction history (public blockchain data)</li>
-            <li>Network fees and transaction status</li>
-            <li>Account metadata</li>
-          </ul>
-          <p><strong>IPFS Networks</strong>:</p>
-          <ul>
-            <li>NFT metadata and images (publicly accessible content)</li>
-            <li>Content distributed across decentralized IPFS network</li>
-          </ul>
-
-          <h2>4. Legal Basis for Processing</h2>
-          <p>We process your personal data based on the following legal grounds under GDPR:</p>
-          <p>
-            <strong>Contract Performance (Article 6(1)(b))</strong>: Processing necessary for providing our wallet and NFT management services, including wallet creation, NFT claiming, transferring, and signing operations.
-          </p>
-          <p>
-            <strong>Legitimate Interest (Article 6(1)(f))</strong>: Processing for app security, fraud prevention, and service functionality.
-          </p>
-          <p>
-            <strong>Consent (Article 6(1)(a))</strong>: For optional features like app configuration preferences.
-          </p>
-          <p>
-            <strong>Legal Obligation (Article 6(1)(c))</strong>: Compliance with Austrian and EU legal requirements, including anti-money laundering and sanctions screening.
-          </p>
-          <p>
-            <strong>No Automated Decision-Making</strong>: We do not engage in automated decision-making or profiling with legal effects.
-          </p>
-
-          <h2>5. How We Use Your Data</h2>
-          <h3>5.1 Service Provision</h3>
-          <ul>
-            <li><strong>Wallet Management</strong>: Creating and maintaining your Stellar wallet</li>
-            <li><strong>NFT Operations</strong>: Facilitating NFT claiming, transferring, minting, and viewing</li>
-            <li><strong>NFC Authentication</strong>: Reading NFC chips to authenticate and interact with physical merchandise</li>
-            <li><strong>Blockchain Transactions</strong>: Executing transactions on the Stellar network</li>
-          </ul>
-
-          <h3>5.2 Platform Operations</h3>
-          <ul>
-            <li><strong>Security</strong>: Protecting your wallet and transaction data</li>
-            <li><strong>Support</strong>: Providing technical support and resolving issues</li>
-          </ul>
-
-          <h3>5.3 Legal Compliance</h3>
-          <ul>
-            <li><strong>Regulatory Requirements</strong>: Complying with Austrian and EU laws</li>
-            <li><strong>Sanctions Screening</strong>: Checking against restricted jurisdiction lists</li>
-            <li><strong>Audit Trail</strong>: Maintaining records for transparency and accountability</li>
-          </ul>
-
-          <h2>6. Data Sharing and Third-Party Services</h2>
-          <h3>6.1 Third-Party Service Providers</h3>
-          <p>We interact with third-party services necessary for operations:</p>
-          <ul>
-            <li><strong>Stellar Network</strong>: Public blockchain for transaction processing</li>
-            <li><strong>IPFS Networks</strong>: Decentralized storage for NFT metadata</li>
-            <li><strong>Apple App Store</strong>: Distribution and device information (collected by Apple)</li>
-          </ul>
-          <p>
-            <strong>No Data Processing Agreements Required</strong>: We do not share personal data with third-party processors. All data remains on your device or on public blockchains.
-          </p>
-
-          <h3>6.2 No Backend Data Storage</h3>
-          <p>We do not store any user data on our own servers. All data exists on:</p>
-          <ul>
-            <li>Your device's iOS Keychain (encrypted, device-only)</li>
-            <li>Your device's UserDefaults (local preferences)</li>
-            <li>The Stellar blockchain (permanent, public, immutable)</li>
-            <li>IPFS networks (distributed, public, persistent)</li>
-          </ul>
-
-          <h3>6.3 Legal Requirements</h3>
-          <p>We may disclose your data when required by law, including:</p>
-          <ul>
-            <li>Compliance with Austrian or EU legal obligations</li>
-            <li>Response to valid legal requests from authorities</li>
-            <li>Protection of our rights and the rights of other users</li>
-            <li>Prevention of fraud or illegal activities</li>
-          </ul>
-
-          <h3>6.4 No Sale of Data</h3>
-          <p>We do not sell, rent, or trade your personal data to third parties for commercial purposes.</p>
-
-          <h2>7. Data Security</h2>
-          <h3>7.1 Security Measures</h3>
-          <p>We implement appropriate technical and organizational measures to protect your data:</p>
-          <ul>
-            <li><strong>iOS Keychain Encryption</strong>: Private keys stored using iOS Keychain Services with <code>kSecAttrAccessibleWhenUnlockedThisDeviceOnly</code> (encrypted, device-only, never synced to iCloud)</li>
-            <li><strong>No Network Transmission</strong>: Private keys never leave your device</li>
-            <li><strong>Access Controls</strong>: Limited access to personal data on a need-to-know basis</li>
-            <li><strong>Secure Coding Practices</strong>: Following iOS security best practices</li>
-          </ul>
-
-          <h3>7.2 Blockchain Security</h3>
-          <ul>
-            <li><strong>Non-Custodial</strong>: We do not store or have access to your private keys</li>
-            <li><strong>Device-Only Storage</strong>: Private keys exist only in your device's Keychain</li>
-            <li><strong>Public Transparency</strong>: Blockchain transactions are publicly verifiable</li>
-          </ul>
-
-          <h3>7.3 NFC Security</h3>
-          <ul>
-            <li><strong>Read-Only Operations</strong>: We only read data from NFC chips, never write or store chip data</li>
-            <li><strong>Local Processing</strong>: All NFC operations occur locally on your device</li>
-            <li><strong>No Chip Data Storage</strong>: Chip public keys and identifiers are not stored after use</li>
-          </ul>
-
-          <h3>7.4 Data Breach Response</h3>
-          <p>
-            In the event of a data breach (though we operate no backend servers), we will notify relevant authorities within 72 hours (GDPR Article 33) and inform affected users without undue delay (GDPR Article 34).
-          </p>
-
-          <h2>8. Your Rights Under GDPR</h2>
-          <p>You have the following rights regarding your personal data:</p>
-
-          <h3>8.1 Right of Access (Article 15)</h3>
-          <p>You can request information about the personal data we process about you, including:</p>
-          <ul>
-            <li>Categories of data processed</li>
-            <li>Purposes of processing</li>
-            <li>Recipients of your data</li>
-            <li>Retention periods</li>
-            <li>Your rights regarding the data</li>
-          </ul>
-
-          <h3>8.2 Right to Rectification (Article 16)</h3>
-          <p>You can request correction of inaccurate or incomplete personal data.</p>
-
-          <h3>8.3 Right to Erasure (Article 17)</h3>
-          <p>You can request deletion of your personal data in certain circumstances, including:</p>
-          <ul>
-            <li>Data no longer necessary for original purposes</li>
-            <li>Withdrawal of consent</li>
-            <li>Unlawful processing</li>
-            <li>Objection to processing</li>
-          </ul>
-          <p><strong>Technical Limitations</strong>:</p>
-          <ul>
-            <li><strong>Blockchain Data</strong>: Permanently recorded and immutable (GDPR Article 17(3)(b) exception for data made public by the data subject)</li>
-            <li><strong>IPFS Content</strong>: Cannot be deleted once uploaded to the decentralized IPFS network</li>
-            <li><strong>Local Device Data</strong>: You can delete all local data by uninstalling the app, which removes:
-              <ul>
-                <li>All data from iOS Keychain (private keys)</li>
-                <li>All data from UserDefaults (wallet addresses, preferences)</li>
+            <SubSection title="3.1 Data You Provide Directly">
+              <p><strong className="text-foreground">Wallet Information:</strong></p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Stellar wallet private keys (stored in iOS Keychain, encrypted, device-only)</li>
+                <li>Stellar wallet public addresses (stored in UserDefaults, local device storage)</li>
+                <li>Wallet connection preferences</li>
               </ul>
-            </li>
-          </ul>
-          <p><strong>User Control</strong>: You can delete your wallet and all local app data at any time by:</p>
-          <ul>
-            <li>Using the "Delete Wallet" function in the app settings</li>
-            <li>Uninstalling the app (removes all local data)</li>
-          </ul>
+              <p><strong className="text-foreground">App Configuration:</strong></p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Network selection (testnet/mainnet)</li>
+                <li>Contract ID preferences</li>
+                <li>Admin mode settings (if applicable)</li>
+              </ul>
+              <p className="text-sm italic">User Responsibility: You are responsible for ensuring your wallet keys are kept secure. We do not have access to your private keys.</p>
+            </SubSection>
 
-          <h3>8.4 Right to Restrict Processing (Article 18)</h3>
-          <p>You can request limitation of data processing in certain situations.</p>
+            <SubSection title="3.2 Data Collected Automatically">
+              <p><strong className="text-foreground">Blockchain Data</strong> (publicly visible on Stellar Network):</p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Transaction hashes and timestamps</li>
+                <li>Smart contract interaction data</li>
+                <li>NFT ownership records</li>
+                <li>Token transfer history</li>
+              </ul>
+              <p><strong className="text-foreground">NFC Chip Data</strong> (read only, not stored):</p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Chip public keys (read from NFC chips for authentication)</li>
+                <li>Contract IDs embedded in NFC chips</li>
+                <li>Token IDs associated with chips</li>
+              </ul>
+              <p><strong className="text-foreground">Local Storage</strong> (stored on your device only):</p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong>iOS Keychain:</strong> Private keys with <code className="text-xs bg-muted px-1 py-0.5 rounded">kSecAttrAccessibleWhenUnlockedThisDeviceOnly</code></li>
+                <li><strong>UserDefaults:</strong> Wallet addresses, network preferences, contract IDs</li>
+              </ul>
+            </SubSection>
 
-          <h3>8.5 Right to Data Portability (Article 20)</h3>
-          <p>
-            You can request a copy of your data in a structured, machine-readable format. Note: Private keys cannot be exported for security reasons, but you can export your wallet address and transaction history.
-          </p>
+            <SubSection title="3.3 Data from Third-Party Services">
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong className="text-foreground">Stellar Network:</strong> Account balances, transaction history, network fees</li>
+                <li><strong className="text-foreground">IPFS Networks:</strong> NFT metadata and images</li>
+              </ul>
+            </SubSection>
+          </Section>
 
-          <h3>8.6 Right to Object (Article 21)</h3>
-          <p>You can object to processing based on legitimate interests or for direct marketing purposes.</p>
+          <Section title="4. Legal Basis for Processing" id="legal-basis">
+            <div className="grid gap-3">
+              <div className="flex gap-3">
+                <Scale className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-foreground">Contract Performance (Article 6(1)(b))</p>
+                  <p className="text-sm">Processing necessary for providing our wallet and NFT management services.</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Scale className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-foreground">Legitimate Interest (Article 6(1)(f))</p>
+                  <p className="text-sm">Processing for app security, fraud prevention, and service functionality.</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Scale className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-foreground">Consent (Article 6(1)(a))</p>
+                  <p className="text-sm">For optional features like app configuration preferences.</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Scale className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-foreground">Legal Obligation (Article 6(1)(c))</p>
+                  <p className="text-sm">Compliance with Austrian and EU legal requirements.</p>
+                </div>
+              </div>
+            </div>
+            <p className="mt-4 text-sm">We do not engage in automated decision-making or profiling with legal effects.</p>
+          </Section>
 
-          <h3>8.7 Rights Related to Automated Decision-Making (Article 22)</h3>
-          <p>You have rights regarding automated decision-making, though our App does not use automated decision-making for individual users.</p>
+          <Section title="5. How We Use Your Data" id="data-usage">
+            <SubSection title="5.1 Service Provision">
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong className="text-foreground">Wallet Management:</strong> Creating and maintaining your Stellar wallet</li>
+                <li><strong className="text-foreground">NFT Operations:</strong> Facilitating NFT claiming, transferring, minting, and viewing</li>
+                <li><strong className="text-foreground">NFC Authentication:</strong> Reading NFC chips to authenticate physical merchandise</li>
+                <li><strong className="text-foreground">Blockchain Transactions:</strong> Executing transactions on the Stellar network</li>
+              </ul>
+            </SubSection>
+            <SubSection title="5.2 Platform Operations">
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong className="text-foreground">Security:</strong> Protecting your wallet and transaction data</li>
+                <li><strong className="text-foreground">Support:</strong> Providing technical support and resolving issues</li>
+              </ul>
+            </SubSection>
+            <SubSection title="5.3 Legal Compliance">
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Complying with Austrian and EU laws</li>
+                <li>Checking against restricted jurisdiction lists</li>
+                <li>Maintaining records for transparency and accountability</li>
+              </ul>
+            </SubSection>
+          </Section>
 
-          <h2>9. Exercising Your Rights</h2>
-          <p>To exercise your rights, contact us at:</p>
-          <p>
-            <strong>Email</strong>: <a href="mailto:legal@consulting-manao.com" className="text-primary hover:underline">legal@consulting-manao.com</a>
-            <br />
-            <strong>Subject</strong>: Data Protection Request - Chimp App
-          </p>
-          <p>
-            We will respond to your request within one month (GDPR Article 12(3)). We may request verification of your identity to protect your privacy.
-          </p>
+          <Section title="6. Data Sharing and Third-Party Services" id="data-sharing">
+            <SubSection title="6.1 Third-Party Service Providers">
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong className="text-foreground">Stellar Network:</strong> Public blockchain for transaction processing</li>
+                <li><strong className="text-foreground">IPFS Networks:</strong> Decentralized storage for NFT metadata</li>
+                <li><strong className="text-foreground">Apple App Store:</strong> Distribution and device information</li>
+              </ul>
+              <p className="text-sm mt-2">We do not share personal data with third-party processors. All data remains on your device or on public blockchains.</p>
+            </SubSection>
+            <SubSection title="6.2 No Backend Data Storage">
+              <p>We do not store any user data on our own servers. All data exists on your device's iOS Keychain, UserDefaults, the Stellar blockchain, or IPFS networks.</p>
+            </SubSection>
+            <SubSection title="6.3 No Sale of Data">
+              <p className="font-medium text-foreground">We do not sell, rent, or trade your personal data to third parties for commercial purposes.</p>
+            </SubSection>
+          </Section>
 
-          <h2>10. Data Retention and Deletion</h2>
-          <p>
-            <strong>Blockchain Data</strong>: Permanently recorded (GDPR Article 17(3)(b) exception for data made public by the data subject).
-          </p>
-          <p>
-            <strong>IPFS Content</strong>: Persists indefinitely on decentralized network; we cannot delete once uploaded.
-          </p>
-          <p><strong>Local Device Data</strong>:</p>
-          <ul>
-            <li><strong>iOS Keychain</strong>: Retained until you delete the wallet or uninstall the app</li>
-            <li><strong>UserDefaults</strong>: Retained until you clear app data or uninstall the app</li>
-            <li><strong>Uninstall</strong>: Removing the app deletes all local data (Keychain and UserDefaults)</li>
-          </ul>
-          <p>
-            <strong>Tax Records</strong>: 7 years per Austrian Federal Fiscal Code (BAO) §132 and §212, if applicable.
-          </p>
-          <p>
-            <strong>Deletion Limitations</strong>: Blockchain and IPFS data cannot be deleted. We can only help you understand how to manage your local device data.
-          </p>
+          <Section title="7. Data Security" id="data-security">
+            <SubSection title="7.1 Security Measures">
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong className="text-foreground">iOS Keychain Encryption:</strong> Private keys stored with device-only access, never synced to iCloud</li>
+                <li><strong className="text-foreground">No Network Transmission:</strong> Private keys never leave your device</li>
+                <li><strong className="text-foreground">Secure Coding Practices:</strong> Following iOS security best practices</li>
+              </ul>
+            </SubSection>
+            <SubSection title="7.2 Blockchain Security">
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong className="text-foreground">Non-Custodial:</strong> We do not store or have access to your private keys</li>
+                <li><strong className="text-foreground">Device-Only Storage:</strong> Private keys exist only in your device's Keychain</li>
+                <li><strong className="text-foreground">Public Transparency:</strong> Blockchain transactions are publicly verifiable</li>
+              </ul>
+            </SubSection>
+            <SubSection title="7.3 Data Breach Response">
+              <p>In the event of a data breach, we will notify relevant authorities within 72 hours (GDPR Article 33) and inform affected users without undue delay (GDPR Article 34).</p>
+            </SubSection>
+          </Section>
 
-          <h2>11. International Data Transfers</h2>
-          <h3>11.1 Data Transfers</h3>
-          <p>Your data may be transferred to and processed in countries outside the EU/EEA, including:</p>
-          <ul>
-            <li><strong>IPFS Networks</strong>: Global decentralized storage networks</li>
-            <li><strong>Stellar Network</strong>: Distributed blockchain network</li>
-            <li><strong>Apple Services</strong>: United States-based service provider (App Store, device information)</li>
-          </ul>
+          <Section title="8. Your Rights Under GDPR" id="gdpr-rights">
+            <div className="grid gap-4">
+              <InfoBox>
+                <p className="font-medium text-foreground mb-2">8.1 Right of Access (Article 15)</p>
+                <p className="text-sm">Request information about the personal data we process about you.</p>
+              </InfoBox>
+              <InfoBox>
+                <p className="font-medium text-foreground mb-2">8.2 Right to Rectification (Article 16)</p>
+                <p className="text-sm">Request correction of inaccurate or incomplete personal data.</p>
+              </InfoBox>
+              <InfoBox>
+                <p className="font-medium text-foreground mb-2">8.3 Right to Erasure (Article 17)</p>
+                <p className="text-sm">Request deletion of your personal data. Note: Blockchain and IPFS data cannot be deleted. You can delete local data by uninstalling the app.</p>
+              </InfoBox>
+              <InfoBox>
+                <p className="font-medium text-foreground mb-2">8.4 Right to Restrict Processing (Article 18)</p>
+                <p className="text-sm">Request limitation of data processing in certain situations.</p>
+              </InfoBox>
+              <InfoBox>
+                <p className="font-medium text-foreground mb-2">8.5 Right to Data Portability (Article 20)</p>
+                <p className="text-sm">Request a copy of your data in a structured, machine-readable format.</p>
+              </InfoBox>
+              <InfoBox>
+                <p className="font-medium text-foreground mb-2">8.6 Right to Object (Article 21)</p>
+                <p className="text-sm">Object to processing based on legitimate interests.</p>
+              </InfoBox>
+            </div>
+          </Section>
 
-          <h3>11.2 Safeguards</h3>
-          <p>
-            We ensure appropriate safeguards for international transfers through adequacy decisions, standard contractual clauses where applicable, and technical measures (iOS Keychain encryption).
-          </p>
+          <Section title="9. Exercising Your Rights" id="exercise-rights">
+            <p>To exercise your rights, contact us at:</p>
+            <div className="glass-card p-4 mt-2">
+              <p><strong className="text-foreground">Email:</strong> <a href="mailto:legal@consulting-manao.com" className="text-primary hover:underline">legal@consulting-manao.com</a></p>
+              <p><strong className="text-foreground">Subject:</strong> Data Protection Request - Chimp App</p>
+            </div>
+            <p className="mt-3 text-sm">We will respond to your request within one month (GDPR Article 12(3)). We may request verification of your identity to protect your privacy.</p>
+          </Section>
 
-          <h2>12. NFC Functionality</h2>
-          <h3>12.1 NFC Permissions</h3>
-          <p>The App requires NFC (Near Field Communication) access to:</p>
-          <ul>
-            <li>Read data from NFC chips embedded in physical merchandise</li>
-            <li>Authenticate chip public keys for NFT operations</li>
-            <li>Read contract IDs and token information from chips</li>
-          </ul>
+          <Section title="10. Data Retention and Deletion" id="data-retention">
+            <ul className="space-y-2">
+              <li><strong className="text-foreground">Blockchain Data:</strong> Permanently recorded (GDPR Article 17(3)(b) exception)</li>
+              <li><strong className="text-foreground">IPFS Content:</strong> Persists indefinitely on decentralized network</li>
+              <li><strong className="text-foreground">Local Device Data:</strong> Retained until you delete the wallet or uninstall the app</li>
+              <li><strong className="text-foreground">Tax Records:</strong> 7 years per Austrian Federal Fiscal Code (BAO) §132 and §212</li>
+            </ul>
+          </Section>
 
-          <h3>12.2 NFC Data Handling</h3>
-          <ul>
-            <li><strong>Read-Only</strong>: We only read data from NFC chips; we do not write data to chips</li>
-            <li><strong>No Storage</strong>: Chip data (public keys, contract IDs) is not stored after use</li>
-            <li><strong>Local Processing</strong>: All NFC operations occur locally on your device</li>
-            <li><strong>Privacy</strong>: NFC chip data is used only for authentication and is not shared with third parties</li>
-          </ul>
+          <Section title="11. International Data Transfers" id="international-transfers">
+            <p>Your data may be transferred to and processed in countries outside the EU/EEA through IPFS Networks, Stellar Network, and Apple Services.</p>
+            <p className="mt-2">We ensure appropriate safeguards through adequacy decisions, standard contractual clauses, and technical measures (iOS Keychain encryption).</p>
+          </Section>
 
-          <h3>12.3 NFC Usage Description</h3>
-          <p>The App displays "Allow to scan tags" when requesting NFC access.</p>
+          <Section title="12. NFC Functionality" id="nfc">
+            <p>The App requires NFC access to read data from NFC chips embedded in physical merchandise. We only read data from NFC chips (never write), chip data is not stored after use, and all NFC operations occur locally on your device.</p>
+          </Section>
 
-          <h2>13. iOS Keychain and Local Storage</h2>
-          <h3>13.1 Keychain Storage</h3>
-          <p>Private keys are stored in iOS Keychain with the following security settings:</p>
-          <ul>
-            <li><strong>Accessibility</strong>: <code>kSecAttrAccessibleWhenUnlockedThisDeviceOnly</code></li>
-            <li><strong>Encryption</strong>: Encrypted by iOS using device-specific keys</li>
-            <li><strong>Device-Only</strong>: Never synced to iCloud or other devices</li>
-            <li><strong>Access Control</strong>: Requires device unlock to access</li>
-          </ul>
+          <Section title="13. iOS Keychain and Local Storage" id="local-storage">
+            <p>Private keys are stored in iOS Keychain with device-only accessibility and are never synced to iCloud. App preferences are stored in UserDefaults and deleted when you uninstall the app.</p>
+            <InfoBox variant="important">
+              <p className="font-medium text-foreground mb-1">No Tracking or Analytics</p>
+              <p className="text-sm">We do not use analytics services, tracking technologies, third-party data collection, or advertising identifiers.</p>
+            </InfoBox>
+          </Section>
 
-          <h3>13.2 UserDefaults Storage</h3>
-          <p>App preferences are stored in UserDefaults (local device storage):</p>
-          <ul>
-            <li>Wallet public addresses</li>
-            <li>Network selection (testnet/mainnet)</li>
-            <li>Contract ID preferences</li>
-            <li>Admin mode settings</li>
-          </ul>
-          <p><strong>Deletion</strong>: All UserDefaults data is deleted when you uninstall the app.</p>
+          <Section title="14. Children's Privacy" id="children">
+            <p>Our services are not intended for children under 18. We do not knowingly collect personal data from children under 18.</p>
+          </Section>
 
-          <h3>13.3 No Tracking or Analytics</h3>
-          <p>We do not use:</p>
-          <ul>
-            <li>Analytics services</li>
-            <li>Tracking technologies</li>
-            <li>Third-party data collection</li>
-            <li>Advertising identifiers</li>
-          </ul>
+          <Section title="15. Changes to This Privacy Policy" id="changes">
+            <p>We may update this Privacy Policy to reflect changes in our practices, legal requirements, or app features. We will notify you of significant changes by posting the updated policy and updating the "Last Updated" date. Continued use of our App after updates constitutes acceptance of the new terms.</p>
+          </Section>
 
-          <h2>14. Children's Privacy</h2>
-          <p>
-            Our services are not intended for children under 18. We do not knowingly collect personal data from children under 18. If we become aware that we have collected data from a child under 18, we will take steps to delete such information.
-          </p>
+          <Section title="16. Data Protection Officer" id="dpo">
+            <p>As a small GmbH, we are not required to appoint a Data Protection Officer under GDPR Article 37. Privacy inquiries can be directed to <a href="mailto:legal@consulting-manao.com" className="text-primary hover:underline">legal@consulting-manao.com</a>.</p>
+          </Section>
 
-          <h2>15. Changes to This Privacy Policy</h2>
-          <h3>15.1 Updates</h3>
-          <p>We may update this Privacy Policy to reflect:</p>
-          <ul>
-            <li>Changes in our data processing practices</li>
-            <li>New legal requirements</li>
-            <li>App feature updates</li>
-            <li>Security improvements</li>
-          </ul>
+          <Section title="17. Supervisory Authority" id="supervisory">
+            <p>You have the right to lodge a complaint with the Austrian Data Protection Authority:</p>
+            <div className="glass-card p-4 mt-2">
+              <p className="font-medium text-foreground">Austrian Data Protection Authority</p>
+              <p>Barichgasse 40-42</p>
+              <p>1030 Vienna, Austria</p>
+              <p><a href="https://dsb.gv.at" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">dsb.gv.at</a></p>
+            </div>
+          </Section>
 
-          <h3>15.2 Notification</h3>
-          <p>We will notify you of significant changes by:</p>
-          <ul>
-            <li>Posting the updated policy in the App (if applicable)</li>
-            <li>Updating the "Last Updated" date</li>
-            <li>Displaying notices in the App</li>
-          </ul>
+          <Section title="18. Contact Information" id="contact">
+            <div className="glass-card p-6">
+              <p className="font-semibold text-foreground text-lg mb-3">Consulting Manao GmbH</p>
+              <div className="space-y-1 text-sm">
+                <p>Registered in Austrian Commercial Register (Firmenbuch)</p>
+                <p>Landesgericht Graz, FN 571029z</p>
+                <p>VAT ID: ATU77780135</p>
+                <p>Managing Director: Pamphile Tupui Christophe Roy</p>
+                <p className="pt-2">
+                  <strong>Email:</strong> <a href="mailto:legal@consulting-manao.com" className="text-primary hover:underline">legal@consulting-manao.com</a>
+                </p>
+              </div>
+            </div>
+          </Section>
+        </div>
 
-          <h3>15.3 Continued Use</h3>
-          <p>Continued use of our App after policy updates constitutes acceptance of the new terms.</p>
-
-          <h2>16. Data Protection Officer</h2>
-          <p>
-            As a small GmbH, we are not required to appoint a Data Protection Officer under GDPR Article 37, but privacy inquiries can be directed to <a href="mailto:legal@consulting-manao.com" className="text-primary hover:underline">legal@consulting-manao.com</a>.
-          </p>
-          <p>
-            <strong>Why No DPO Required</strong>: Under GDPR Article 37(1), DPO appointment is mandatory only for public authorities or organizations with large-scale processing. Our App operates with minimal data collection and no backend storage, thus not meeting these thresholds.
-          </p>
-
-          <h2>17. Supervisory Authority</h2>
-          <p>You have the right to lodge a complaint with the Austrian Data Protection Authority:</p>
-          <p>
-            <strong>Austrian Data Protection Authority</strong>
-            <br />
-            Barichgasse 40-42
-            <br />
-            1030 Vienna, Austria
-            <br />
-            Website: <a href="https://dsb.gv.at" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">dsb.gv.at</a>
-          </p>
-
-          <h2>18. Contact Information</h2>
-          <p>For any questions about this Privacy Policy or our data practices:</p>
-          <p>
-            <strong>Consulting Manao GmbH</strong>
-            <br />
-            Registered in Austrian Commercial Register (Firmenbuch)
-            <br />
-            Landesgericht Graz, FN 571029z
-            <br />
-            VAT ID: ATU77780135
-            <br />
-            Managing Director: Pamphile Tupui Christophe Roy
-          </p>
-          <p>
-            <strong>Contact</strong>:
-            <br />
-            Email: <a href="mailto:legal@consulting-manao.com" className="text-primary hover:underline">legal@consulting-manao.com</a>
-          </p>
-          <p className="text-muted-foreground mt-8">
-            <strong>Last Updated</strong>: January 2026
-          </p>
-        </article>
+        <footer className="mt-16 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
+          <p>Last Updated: January 2026</p>
+        </footer>
       </div>
     </div>
   );
