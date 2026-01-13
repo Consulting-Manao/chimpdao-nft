@@ -22,7 +22,7 @@ const PrivacyPolicy = () => {
           <section className="space-y-4">
             <h2 className="text-xl font-semibold">1. Introduction</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Consulting Manao GmbH ("Company", "we", "us") operates the Chimp iOS application ("App", "Service") for the Stellar Merch Shop platform. We are committed to protecting your privacy and ensuring transparency about how we collect, use, and protect your personal data in accordance with the General Data Protection Regulation (GDPR) and Austrian data protection laws.
+              Consulting Manao GmbH ("Company", "we", "us") operates the Chimp iOS application ("App", "Service") for the ChimpDAO platform. We are committed to protecting your privacy and ensuring transparency about how we collect, use, and protect your personal data in accordance with the General Data Protection Regulation (GDPR) and Austrian data protection laws.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               <strong className="text-foreground">Minimal Data Collection:</strong> Our App involves minimal personal data collection. We do not operate backend servers or databases. All user data is stored locally on your device (iOS Keychain and UserDefaults) or on-chain (Stellar blockchain). We do not use analytics, tracking, or third-party data collection services.
