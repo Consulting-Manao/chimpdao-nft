@@ -39,8 +39,8 @@
   --color-chimp-yellow: hsl(50 100% 50%);
   --color-chimp-yellow-glow: hsl(50 100% 60%);
   --color-chimp-purple: hsl(270 100% 60%);
-  --color-glass: hsl(0 0% 10%);
-  --color-glass-border: hsl(0 0% 22%);
+  --color-glass: hsl(0 0% 14%);
+  --color-glass-border: hsl(0 0% 30%);
 
   --radius-lg: 0.75rem;
   --radius-md: 0.5rem;
@@ -86,7 +86,7 @@
   .glass-card {
     background-color: var(--color-glass);
     backdrop-filter: blur(24px);
-    border: 1px solid hsl(0 0% 30% / 0.15);
+    border: 1px solid hsl(0 0% 40% / 0.25);
     border-radius: var(--radius-lg);
     box-shadow: 
       0 2px 8px -2px hsl(0 0% 0% / 0.4),
@@ -96,7 +96,7 @@
   .glass-card-hover {
     background-color: var(--color-glass);
     backdrop-filter: blur(24px);
-    border: 1px solid hsl(0 0% 30% / 0.15);
+    border: 1px solid hsl(0 0% 40% / 0.25);
     border-radius: var(--radius-lg);
     box-shadow: 
       0 2px 8px -2px hsl(0 0% 0% / 0.4),
