@@ -108,7 +108,7 @@
   .glass-card-hover:hover,
   .glass-card-hover:focus-visible {
     background-color: hsl(0 0% 14%);
-    border-color: hsl(50 100% 50% / 0.4);
+    border-color: hsl(0 0% 40% / 0.25);
     transform: translateY(-4px) scale(1.02);
     box-shadow: 
       0 20px 40px -10px hsl(50 100% 50% / 0.25),
