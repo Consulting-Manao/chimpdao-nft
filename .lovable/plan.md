@@ -1,60 +1,80 @@
 
-## Plan: Footer & Card Visibility Adjustments
+
+## Plan: Footer Border & Card Visibility Fix
 
 ### Summary
 
-| Change | Description |
-|--------|-------------|
-| **Footer Reorder** | Move Privacy link before copyright |
-| **Footer Styling** | Match landing page exactly - remove spacers, add circular social buttons, apply `invert` to Stellar logo |
-| **Card Visibility** | Increase card background lightness for better visibility at rest |
+| Issue | Fix |
+|-------|-----|
+| **Footer border** | Use subtle gray line matching landing page: `border-t border-white/10` |
+| **Social icon circles** | Use darker background matching landing page styling |
+| **Card visibility** | Increase `--color-glass` lightness so cards are visible at rest |
 
 ---
 
-### 1. Footer Changes
+### 1. Footer Border Fix
 
-**File: `src/components/Footer.tsx`**
+**File:** `src/components/Footer.tsx`
 
-Update to match the landing page structure:
+**Current:** `border-t border-border` → results in `hsl(0 0% 18%)` solid line which is too visible
 
-**Left side (keep similar):**
-- Chimp icon + "ChimpDAO" text
-- Social icons in rounded circles with `bg-secondary` styling
-
-**Right side (reorder + restyle):**
-- "Built on" + Stellar logo (with `invert opacity-70` class)
-- "Funded by" + SCF logo
-- Privacy link (NEW position - before copyright)
-- Copyright text
-
-**Key styling changes:**
-- Remove pipe separators (`|`)
-- Social icons: `w-8 h-8 rounded-full bg-secondary` with hover effects
-- Use `text-xs` instead of `text-sm` for badge text
-- Add `invert opacity-70` to Stellar logo for proper display
-- Reorder: Privacy before Copyright
-
----
-
-### 2. Card Visibility Changes
-
-**File: `src/index.css`**
-
-Current issue: Cards at `hsl(0 0% 10%)` on background `hsl(0 0% 4%)` = only 6% lightness difference
-
-**Fix:** Increase card background lightness:
+**Fix:** Change to a subtle white line with low opacity to match landing page:
 
 ```text
 Current:
-  --color-glass: hsl(0 0% 10%)
-  .glass-card border: hsl(0 0% 30% / 0.15)
+  <footer className="mt-auto border-t border-border py-8">
 
 Updated:
-  --color-glass: hsl(0 0% 14%)
-  .glass-card border: hsl(0 0% 40% / 0.25)
+  <footer className="mt-auto border-t border-white/10 py-8">
 ```
 
-This gives 10% lightness difference and more visible borders at rest.
+This creates the subtle thin gray line shown in the screenshot.
+
+---
+
+### 2. Social Icon Styling Fix
+
+**File:** `src/components/Footer.tsx`
+
+Looking at the screenshot, the social icons have:
+- Darker circular backgrounds (more visible against the dark footer)
+- Gray icon color (not bright white)
+
+**Current:** `bg-secondary` which is `hsl(0 0% 12%)`
+
+**Fix:** Use a slightly more visible background:
+
+```text
+Current:
+  className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center 
+             text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
+
+Updated:
+  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center 
+             text-muted-foreground hover:text-foreground hover:bg-white/15 transition-colors"
+```
+
+Using `bg-white/10` creates the visible dark circles that match the landing page screenshot.
+
+---
+
+### 3. Card Visibility Fix
+
+**File:** `src/index.css`
+
+**Issue:** Cards on landing page and collection page use `glass-card-hover` with `--color-glass: hsl(0 0% 14%)` which is only 10% lighter than the background `hsl(0 0% 4%)`. User says the detail page cards are fine, but they use the same class - so we need to increase the glass value more.
+
+**Fix:** Increase `--color-glass` to `hsl(0 0% 18%)` for better visibility:
+
+```text
+Current:
+  --color-glass: hsl(0 0% 14%);
+
+Updated:
+  --color-glass: hsl(0 0% 18%);
+```
+
+This gives 14% lightness difference from background (4% → 18%) making cards clearly visible at rest.
 
 ---
 
@@ -63,13 +83,10 @@ This gives 10% lightness difference and more visible borders at rest.
 **Files to modify:**
 
 1. **`src/components/Footer.tsx`**
-   - Restructure right side to put Privacy before copyright
-   - Add rounded circle styling to social icons
-   - Add `invert opacity-70` to Stellar logo
-   - Remove pipe separators
-   - Use `text-xs` for smaller text
+   - Line 5: Change `border-t border-border` to `border-t border-white/10`
+   - Lines 26, 37: Change social icon classes from `bg-secondary` to `bg-white/10` and `hover:bg-secondary/80` to `hover:bg-white/15`
+   - Increase icon container size from `w-8 h-8` to `w-9 h-9` (matches screenshot proportions)
 
 2. **`src/index.css`**
-   - Update `--color-glass` from `hsl(0 0% 10%)` to `hsl(0 0% 14%)`
-   - Update `--color-glass-border` from `hsl(0 0% 22%)` to `hsl(0 0% 30%)`
-   - Update `.glass-card` border from `hsl(0 0% 30% / 0.15)` to `hsl(0 0% 40% / 0.25)`
+   - Line 42: Change `--color-glass: hsl(0 0% 14%)` to `--color-glass: hsl(0 0% 18%)`
+
