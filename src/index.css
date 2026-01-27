@@ -84,7 +84,7 @@
 
 @layer components {
   .glass-card {
-    background-color: var(--color-glass);
+    background-color: hsl(0 0% 25%);
     backdrop-filter: blur(24px);
     border: 1px solid hsl(0 0% 40% / 0.25);
     border-radius: var(--radius-lg);
@@ -94,7 +94,7 @@
   }
 
   .glass-card-hover {
-    background-color: var(--color-glass);
+    background-color: hsl(0 0% 25%);
     backdrop-filter: blur(24px);
     border: 1px solid hsl(0 0% 40% / 0.25);
     border-radius: var(--radius-lg);
