@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CollectionCard } from '@/components/CollectionCard';
 import { PageHeader } from '@/components/PageHeader';
+import { Footer } from '@/components/Footer';
 import { collections } from '@/config/collections';
 import { getTokenUri } from '@/services/stellar';
 import { fetchNFTMetadata, ipfsToHttp } from '@/services/ipfs';
@@ -36,39 +37,44 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <main id="main-content" className="min-h-screen p-6 max-w-7xl mx-auto">
-      <PageHeader
-        title="ChimpDAO"
-        subtitle="Explore the NFT collections"
-      />
+    <div className="min-h-screen flex flex-col">
+      <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full">
+        <PageHeader
+          title="ChimpDAO"
+          subtitle="Explore the NFT collections"
+          icon="/icon-nft.png"
+          yellowTitle
+        />
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loading ? (
-          <div className="col-span-full text-center py-12" role="status" aria-label="Loading collections">
-            <p className="text-muted-foreground">Loading collections...</p>
-          </div>
-        ) : (
-          collections.map((collection, idx) => (
-            <div
-              key={collection.contractId}
-              className="animate-fade-in"
-              style={{ animationDelay: `${idx * 100}ms` }}
-            >
-              <CollectionCard
-                collection={collection}
-                previewImage={previews[collection.contractId]}
-                onClick={() => navigate(`/${collection.slug}`)}
-              />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {loading ? (
+            <div className="col-span-full text-center py-12" role="status" aria-label="Loading collections">
+              <p className="text-muted-foreground">Loading collections...</p>
             </div>
-          ))
-        )}
-      </div>
-
-      {collections.length === 0 && (
-        <div className="glass-card p-12 text-center">
-          <p className="text-muted-foreground">No collections configured</p>
+          ) : (
+            collections.map((collection, idx) => (
+              <div
+                key={collection.contractId}
+                className="animate-fade-in"
+                style={{ animationDelay: `${idx * 100}ms` }}
+              >
+                <CollectionCard
+                  collection={collection}
+                  previewImage={previews[collection.contractId]}
+                  onClick={() => navigate(`/${collection.slug}`)}
+                />
+              </div>
+            ))
+          )}
         </div>
-      )}
-    </main>
+
+        {collections.length === 0 && (
+          <div className="glass-card p-12 text-center">
+            <p className="text-muted-foreground">No collections configured</p>
+          </div>
+        )}
+      </main>
+      <Footer />
+    </div>
   );
 }

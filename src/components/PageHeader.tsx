@@ -5,9 +5,11 @@ interface PageHeaderProps {
   title: string;
   subtitle?: string;
   showBack?: boolean;
+  icon?: string;
+  yellowTitle?: boolean;
 }
 
-export function PageHeader({ title, subtitle, showBack }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, showBack, icon, yellowTitle }: PageHeaderProps) {
   const navigate = useNavigate();
 
   return (
@@ -22,7 +24,19 @@ export function PageHeader({ title, subtitle, showBack }: PageHeaderProps) {
           <span className="text-sm">Back</span>
         </button>
       )}
-      <h1 className="text-3xl font-bold">{title}</h1>
+      <div className="flex items-center gap-3">
+        {icon && (
+          <img
+            src={icon}
+            alt=""
+            className="h-10 w-10"
+            aria-hidden="true"
+          />
+        )}
+        <h1 className={`text-3xl font-bold ${yellowTitle ? 'text-glow' : ''}`}>
+          {title}
+        </h1>
+      </div>
       {subtitle && (
         <p className="mt-2 text-muted-foreground">{subtitle}</p>
       )}
