@@ -1,92 +1,94 @@
 
+## Plan: Fix Footer Styling & Card Visibility
 
-## Plan: Footer Border & Card Visibility Fix
+### Issue Summary
 
-### Summary
-
-| Issue | Fix |
-|-------|-----|
-| **Footer border** | Use subtle gray line matching landing page: `border-t border-white/10` |
-| **Social icon circles** | Use darker background matching landing page styling |
-| **Card visibility** | Increase `--color-glass` lightness so cards are visible at rest |
+| Issue | Description |
+|-------|-------------|
+| **Footer styling** | Multiple differences from landing page - icon sizes, backgrounds, image aspect ratios |
+| **Card visibility** | Cards use 18% gray on 4% background - not visible enough, especially on collection page |
 
 ---
 
-### 1. Footer Border Fix
+## 1. Footer Fixes
 
 **File:** `src/components/Footer.tsx`
 
-**Current:** `border-t border-border` → results in `hsl(0 0% 18%)` solid line which is too visible
+Comparing current footer to landing page source (`https://github.com/Consulting-Manao/chimpdao-landing`):
 
-**Fix:** Change to a subtle white line with low opacity to match landing page:
+| Element | Current | Landing Page |
+|---------|---------|--------------|
+| Footer border | `border-white/10` | `border-border` |
+| Logo size | `h-8 w-8` | `w-10 h-10 object-contain` |
+| Social container size | `w-9 h-9` | `w-8 h-8` |
+| Social background | `bg-white/10` | `bg-secondary` |
+| Social hover | `hover:text-foreground hover:bg-white/15` | `hover:text-primary hover:bg-primary/10` |
+| Transition | `transition-colors` | `transition-all duration-300` |
+| Stellar image | `h-4 w-4` (forced square) | `h-4 w-auto` (natural aspect ratio) |
+| SCF image | `h-4` | `h-4 w-auto` |
 
-```text
-Current:
-  <footer className="mt-auto border-t border-border py-8">
+### Changes
 
-Updated:
-  <footer className="mt-auto border-t border-white/10 py-8">
+**Line 5** - Footer border:
+```
+border-white/10  →  border-border
 ```
 
-This creates the subtle thin gray line shown in the screenshot.
+**Line 14** - Logo size:
+```
+className="h-8 w-8"  →  className="w-10 h-10 object-contain"
+```
+
+**Lines 26 and 37** - Social icon containers:
+```
+className="w-9 h-9 rounded-full bg-white/10 ... hover:text-foreground hover:bg-white/15 transition-colors"
+
+→
+
+className="w-8 h-8 rounded-full bg-secondary ... hover:text-primary hover:bg-primary/10 transition-all duration-300"
+```
+
+**Line 60** - Stellar image (fixes aspect ratio):
+```
+className="h-4 w-4 invert opacity-70"  →  className="h-4 w-auto invert opacity-70"
+```
+
+**Line 77** - SCF image:
+```
+className="h-4"  →  className="h-4 w-auto"
+```
 
 ---
 
-### 2. Social Icon Styling Fix
-
-**File:** `src/components/Footer.tsx`
-
-Looking at the screenshot, the social icons have:
-- Darker circular backgrounds (more visible against the dark footer)
-- Gray icon color (not bright white)
-
-**Current:** `bg-secondary` which is `hsl(0 0% 12%)`
-
-**Fix:** Use a slightly more visible background:
-
-```text
-Current:
-  className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center 
-             text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
-
-Updated:
-  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center 
-             text-muted-foreground hover:text-foreground hover:bg-white/15 transition-colors"
-```
-
-Using `bg-white/10` creates the visible dark circles that match the landing page screenshot.
-
----
-
-### 3. Card Visibility Fix
+## 2. Card Visibility Fix
 
 **File:** `src/index.css`
 
-**Issue:** Cards on landing page and collection page use `glass-card-hover` with `--color-glass: hsl(0 0% 14%)` which is only 10% lighter than the background `hsl(0 0% 4%)`. User says the detail page cards are fine, but they use the same class - so we need to increase the glass value more.
+The cards need to be more visible against the dark background. Currently:
+- Background: 4% lightness
+- Cards (`--color-glass`): 18% lightness
 
-**Fix:** Increase `--color-glass` to `hsl(0 0% 18%)` for better visibility:
+This is too subtle. Increasing to ~25% will make cards clearly distinguishable.
 
-```text
-Current:
-  --color-glass: hsl(0 0% 14%);
+### Change
 
-Updated:
-  --color-glass: hsl(0 0% 18%);
+**Line 42** - Increase glass lightness:
+```
+--color-glass: hsl(0 0% 18%);  →  --color-glass: hsl(0 0% 25%);
 ```
 
-This gives 14% lightness difference from background (4% → 18%) making cards clearly visible at rest.
+No changes to hover behavior - keeping existing glow/zoom/border effects exactly as they are.
 
 ---
 
-### Technical Details
+## Summary
 
-**Files to modify:**
-
-1. **`src/components/Footer.tsx`**
-   - Line 5: Change `border-t border-border` to `border-t border-white/10`
-   - Lines 26, 37: Change social icon classes from `bg-secondary` to `bg-white/10` and `hover:bg-secondary/80` to `hover:bg-white/15`
-   - Increase icon container size from `w-8 h-8` to `w-9 h-9` (matches screenshot proportions)
-
-2. **`src/index.css`**
-   - Line 42: Change `--color-glass: hsl(0 0% 14%)` to `--color-glass: hsl(0 0% 18%)`
-
+| File | Lines | Change |
+|------|-------|--------|
+| `Footer.tsx` | 5 | `border-white/10` → `border-border` |
+| `Footer.tsx` | 14 | `h-8 w-8` → `w-10 h-10 object-contain` |
+| `Footer.tsx` | 26 | Social container class update |
+| `Footer.tsx` | 37 | Social container class update |
+| `Footer.tsx` | 60 | `h-4 w-4` → `h-4 w-auto` |
+| `Footer.tsx` | 77 | `h-4` → `h-4 w-auto` |
+| `index.css` | 42 | `--color-glass: hsl(0 0% 18%)` → `hsl(0 0% 25%)` |
