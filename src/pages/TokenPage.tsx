@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { AttributeBadge } from '@/components/AttributeBadge';
 import { CopyButton } from '@/components/CopyButton';
 import { ErrorState } from '@/components/ErrorState';
+import { Footer } from '@/components/Footer';
 import { getCollectionByContractId, getCollectionBySlug } from '@/config/collections';
 import { getTokenUri, getTokenOwner } from '@/services/stellar';
 import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
@@ -108,16 +109,19 @@ export default function TokenPage() {
 
   if (loading) {
     return (
-      <main id="main-content" className="min-h-screen p-6 max-w-5xl mx-auto">
-        <PageHeader title="Loading..." showBack />
-        <div 
-          className="glass-card overflow-hidden max-w-lg mx-auto"
-          role="status"
-          aria-label="Loading token details"
-        >
-          <div className="aspect-square bg-muted animate-pulse" />
-        </div>
-      </main>
+      <div className="min-h-screen flex flex-col">
+        <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full">
+          <PageHeader title="Loading..." showBack />
+          <div 
+            className="glass-card overflow-hidden max-w-lg mx-auto"
+            role="status"
+            aria-label="Loading token details"
+          >
+            <div className="aspect-square bg-muted animate-pulse" />
+          </div>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
@@ -132,115 +136,118 @@ export default function TokenPage() {
   }
 
   return (
-    <main id="main-content" className="min-h-screen p-6 max-w-5xl mx-auto">
-      <PageHeader
-        title={metadata?.name || `Token #${tokenId}`}
-        showBack
-      />
+    <div className="min-h-screen flex flex-col">
+      <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full">
+        <PageHeader
+          title={metadata?.name || `Token #${tokenId}`}
+          showBack
+        />
 
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* Image */}
-        <div className="glass-card overflow-hidden">
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt={metadata?.name || `Token #${tokenId}`}
-              className="w-full h-auto"
-            />
-          ) : (
-            <div className="aspect-square flex items-center justify-center bg-muted" aria-hidden="true">
-              <span className="text-muted-foreground">No image</span>
-            </div>
-          )}
-        </div>
-
-        {/* Details */}
-        <div className="space-y-6">
-          {metadata?.description && (
-            <div className="glass-card p-4">
-              <h2 className="text-sm font-medium text-muted-foreground mb-2">Description</h2>
-              <p className="text-sm">{metadata.description}</p>
-            </div>
-          )}
-
-          {/* Attributes */}
-          {metadata?.attributes && metadata.attributes.length > 0 && (
-            <section aria-labelledby="attributes-heading">
-              <h2 id="attributes-heading" className="text-sm font-medium text-muted-foreground mb-3">Attributes</h2>
-              <div className="grid grid-cols-2 gap-3">
-                {metadata.attributes.map((attr, idx) => (
-                  <AttributeBadge
-                    key={idx}
-                    traitType={attr.trait_type}
-                    value={attr.value}
-                  />
-                ))}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Image */}
+          <div className="glass-card overflow-hidden">
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt={metadata?.name || `Token #${tokenId}`}
+                className="w-full h-auto"
+              />
+            ) : (
+              <div className="aspect-square flex items-center justify-center bg-muted" aria-hidden="true">
+                <span className="text-muted-foreground">No image</span>
               </div>
-            </section>
-          )}
+            )}
+          </div>
 
-          {/* Technical Info */}
-          <div className="glass-card p-4 space-y-3">
-            <h2 className="text-sm font-medium text-muted-foreground">Details</h2>
-            
-            <dl className="space-y-2 text-sm">
-              <div className="flex items-center justify-between">
-                <dt className="text-muted-foreground">Contract</dt>
-                <dd>
-                  <CopyButton value={collection.contractId} label={`${collection.contractId.slice(0, 8)}...${collection.contractId.slice(-4)}`} />
-                </dd>
+          {/* Details */}
+          <div className="space-y-6">
+            {metadata?.description && (
+              <div className="glass-card p-4">
+                <h2 className="text-sm font-medium text-muted-foreground mb-2">Description</h2>
+                <p className="text-sm">{metadata.description}</p>
               </div>
+            )}
+
+            {/* Attributes */}
+            {metadata?.attributes && metadata.attributes.length > 0 && (
+              <section aria-labelledby="attributes-heading">
+                <h2 id="attributes-heading" className="text-sm font-medium text-muted-foreground mb-3">Attributes</h2>
+                <div className="grid grid-cols-2 gap-3">
+                  {metadata.attributes.map((attr, idx) => (
+                    <AttributeBadge
+                      key={idx}
+                      traitType={attr.trait_type}
+                      value={attr.value}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Technical Info */}
+            <div className="glass-card p-4 space-y-3">
+              <h2 className="text-sm font-medium text-muted-foreground">Details</h2>
               
-              <div className="flex items-center justify-between">
-                <dt className="text-muted-foreground">Token ID</dt>
-                <dd className="font-mono">{tokenId}</dd>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <dt className="text-muted-foreground">Owner</dt>
-                <dd>
-                  {ownerLoading ? (
-                    <span className="text-muted-foreground text-xs">Loading...</span>
-                  ) : owner ? (
-                    <CopyButton value={owner} label={`${owner.slice(0, 8)}...${owner.slice(-4)}`} />
-                  ) : (
-                    <span className="text-muted-foreground">No owner</span>
-                  )}
-                </dd>
-              </div>
-
-              {ipfsUri && (
+              <dl className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">IPFS</dt>
+                  <dt className="text-muted-foreground">Contract</dt>
                   <dd>
-                    <a
-                      href={ipfsToHttp(ipfsUri)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-primary hover:underline"
-                      aria-label="View metadata on IPFS (opens in new tab)"
-                    >
-                      View <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                    </a>
+                    <CopyButton value={collection.contractId} label={`${collection.contractId.slice(0, 8)}...${collection.contractId.slice(-4)}`} />
                   </dd>
                 </div>
-              )}
+                
+                <div className="flex items-center justify-between">
+                  <dt className="text-muted-foreground">Token ID</dt>
+                  <dd className="font-mono">{tokenId}</dd>
+                </div>
 
-              <div className="flex items-center justify-between">
-                <dt className="text-muted-foreground">Collection</dt>
-                <dd>
-                  <Link
-                    to={`/${collection.slug}`}
-                    className="text-primary hover:underline"
-                  >
-                    {collection.name}
-                  </Link>
-                </dd>
-              </div>
-            </dl>
+                <div className="flex items-center justify-between">
+                  <dt className="text-muted-foreground">Owner</dt>
+                  <dd>
+                    {ownerLoading ? (
+                      <span className="text-muted-foreground text-xs">Loading...</span>
+                    ) : owner ? (
+                      <CopyButton value={owner} label={`${owner.slice(0, 8)}...${owner.slice(-4)}`} />
+                    ) : (
+                      <span className="text-muted-foreground">No owner</span>
+                    )}
+                  </dd>
+                </div>
+
+                {ipfsUri && (
+                  <div className="flex items-center justify-between">
+                    <dt className="text-muted-foreground">IPFS</dt>
+                    <dd>
+                      <a
+                        href={ipfsToHttp(ipfsUri)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-primary hover:underline"
+                        aria-label="View metadata on IPFS (opens in new tab)"
+                      >
+                        View <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                      </a>
+                    </dd>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <dt className="text-muted-foreground">Collection</dt>
+                  <dd>
+                    <Link
+                      to={`/${collection.slug}`}
+                      className="text-primary hover:underline"
+                    >
+                      {collection.name}
+                    </Link>
+                  </dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+      <Footer />
+    </div>
   );
 }

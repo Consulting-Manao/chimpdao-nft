@@ -4,36 +4,43 @@
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
-  --color-background: hsl(230 25% 8%);
-  --color-foreground: hsl(210 20% 95%);
+  /* ChimpDAO Design System - Pure black + Electric Yellow */
+  --color-background: hsl(0 0% 4%);
+  --color-foreground: hsl(0 0% 95%);
 
-  --color-card: hsl(230 20% 12%);
-  --color-card-foreground: hsl(210 20% 95%);
+  --color-card: hsl(0 0% 8%);
+  --color-card-foreground: hsl(0 0% 95%);
 
-  --color-popover: hsl(230 20% 10%);
-  --color-popover-foreground: hsl(210 20% 95%);
+  --color-popover: hsl(0 0% 6%);
+  --color-popover-foreground: hsl(0 0% 95%);
 
-  --color-primary: hsl(200 100% 60%);
-  --color-primary-foreground: hsl(230 25% 8%);
+  /* Electric Yellow Primary */
+  --color-primary: hsl(50 100% 50%);
+  --color-primary-foreground: hsl(0 0% 4%);
 
-  --color-secondary: hsl(230 15% 20%);
-  --color-secondary-foreground: hsl(210 20% 90%);
+  --color-secondary: hsl(0 0% 12%);
+  --color-secondary-foreground: hsl(0 0% 90%);
 
-  --color-muted: hsl(230 15% 18%);
-  --color-muted-foreground: hsl(215 15% 65%);
+  --color-muted: hsl(0 0% 10%);
+  --color-muted-foreground: hsl(0 0% 60%);
 
-  --color-accent: hsl(280 80% 65%);
-  --color-accent-foreground: hsl(210 20% 95%);
+  /* Purple Accent (similar to landing) */
+  --color-accent: hsl(270 100% 60%);
+  --color-accent-foreground: hsl(0 0% 95%);
 
   --color-destructive: hsl(0 70% 50%);
-  --color-destructive-foreground: hsl(210 20% 95%);
+  --color-destructive-foreground: hsl(0 0% 95%);
 
-  --color-border: hsl(230 15% 22%);
-  --color-input: hsl(230 15% 18%);
-  --color-ring: hsl(200 100% 60%);
+  --color-border: hsl(0 0% 18%);
+  --color-input: hsl(0 0% 12%);
+  --color-ring: hsl(50 100% 50%);
 
-  --color-glass: hsl(230 20% 15%);
-  --color-glass-border: hsl(230 15% 28%);
+  /* ChimpDAO specific tokens */
+  --color-chimp-yellow: hsl(50 100% 50%);
+  --color-chimp-yellow-glow: hsl(50 100% 60%);
+  --color-chimp-purple: hsl(270 100% 60%);
+  --color-glass: hsl(0 0% 10%);
+  --color-glass-border: hsl(0 0% 22%);
 
   --radius-lg: 0.75rem;
   --radius-md: 0.5rem;
@@ -59,15 +66,13 @@
   }
 
   *:focus-visible {
-    outline: 2px solid hsl(200 100% 60%);
+    outline: 2px solid hsl(50 100% 50%);
     outline-offset: 2px;
   }
 
   body {
     @apply text-foreground antialiased;
-    background: 
-      radial-gradient(ellipse at top, hsl(230 30% 15% / 0.4) 0%, transparent 50%),
-      linear-gradient(180deg, hsl(230 25% 6%) 0%, hsl(230 25% 10%) 100%);
+    background: hsl(0 0% 4%);
     min-height: 100vh;
   }
 
@@ -81,7 +86,7 @@
   .glass-card {
     background-color: var(--color-glass);
     backdrop-filter: blur(24px);
-    border: 1px solid hsl(230 20% 40% / 0.15);
+    border: 1px solid hsl(0 0% 30% / 0.15);
     border-radius: var(--radius-lg);
     box-shadow: 
       0 2px 8px -2px hsl(0 0% 0% / 0.4),
@@ -91,7 +96,7 @@
   .glass-card-hover {
     background-color: var(--color-glass);
     backdrop-filter: blur(24px);
-    border: 1px solid hsl(230 20% 40% / 0.15);
+    border: 1px solid hsl(0 0% 30% / 0.15);
     border-radius: var(--radius-lg);
     box-shadow: 
       0 2px 8px -2px hsl(0 0% 0% / 0.4),
@@ -99,15 +104,38 @@
     transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease-out, background-color 0.2s ease-out;
   }
 
+  /* Yellow electric glow on hover */
   .glass-card-hover:hover,
   .glass-card-hover:focus-visible {
-    background-color: hsl(230 20% 18%);
-    border-color: hsl(200 100% 70% / 0.3);
+    background-color: hsl(0 0% 14%);
+    border-color: hsl(50 100% 50% / 0.4);
     transform: translateY(-4px) scale(1.02);
     box-shadow: 
-      0 20px 40px -10px hsl(200 100% 50% / 0.2),
-      0 0 20px 0 hsl(280 80% 65% / 0.08),
+      0 20px 40px -10px hsl(50 100% 50% / 0.25),
+      0 0 30px 0 hsl(50 100% 50% / 0.1),
       inset 0 1px 0 0 hsl(0 0% 100% / 0.1);
+  }
+
+  /* Text glow effect for yellow headlines */
+  .text-glow {
+    color: hsl(50 100% 50%);
+    text-shadow:
+      0 0 10px hsl(50 100% 50% / 0.5),
+      0 0 20px hsl(50 100% 50% / 0.3),
+      0 0 40px hsl(50 100% 50% / 0.15);
+  }
+
+  /* Electric glow for buttons/interactive elements */
+  .electric-glow {
+    box-shadow:
+      0 0 15px hsl(50 100% 50% / 0.3),
+      0 0 30px hsl(50 100% 50% / 0.15);
+  }
+
+  .electric-glow-hover:hover {
+    box-shadow:
+      0 0 25px hsl(50 100% 50% / 0.5),
+      0 0 50px hsl(50 100% 50% / 0.3);
   }
 
   .sr-only {

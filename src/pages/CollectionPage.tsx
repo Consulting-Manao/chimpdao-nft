@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { NFTCard } from '@/components/NFTCard';
 import { PageHeader } from '@/components/PageHeader';
 import { ErrorState } from '@/components/ErrorState';
+import { Footer } from '@/components/Footer';
 import { getCollectionBySlug, getCollectionByContractId, type Collection } from '@/config/collections';
 import { getTokenUri } from '@/services/stellar';
 import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
@@ -96,46 +97,52 @@ export default function CollectionPage() {
 
   if (loading || !collection) {
     return (
-      <main id="main-content" className="min-h-screen p-6 max-w-7xl mx-auto">
-        <PageHeader title="Loading..." showBack />
-        <div 
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
-          role="status"
-          aria-label="Loading collection"
-        >
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="glass-card aspect-square animate-pulse" />
-          ))}
-        </div>
-      </main>
+      <div className="min-h-screen flex flex-col">
+        <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full">
+          <PageHeader title="Loading..." showBack />
+          <div 
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+            role="status"
+            aria-label="Loading collection"
+          >
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="glass-card aspect-square animate-pulse" />
+            ))}
+          </div>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <main id="main-content" className="min-h-screen p-6 max-w-7xl mx-auto">
-      <PageHeader
-        title={collection.name}
-        subtitle={collection.description}
-        showBack
-      />
+    <div className="min-h-screen flex flex-col">
+      <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full">
+        <PageHeader
+          title={collection.name}
+          subtitle={collection.description}
+          showBack
+        />
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {tokens.map((token) => (
-          <div
-            key={token.tokenId}
-            className="animate-fade-in"
-            style={{ animationDelay: `${token.tokenId * 50}ms` }}
-          >
-            <NFTCard
-              tokenId={token.tokenId}
-              metadata={token.metadata}
-              imageUrl={token.imageUrl}
-              isLoading={token.loading}
-              onClick={() => navigate(`/${collection.slug}/${token.tokenId}`)}
-            />
-          </div>
-        ))}
-      </div>
-    </main>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {tokens.map((token) => (
+            <div
+              key={token.tokenId}
+              className="animate-fade-in"
+              style={{ animationDelay: `${token.tokenId * 50}ms` }}
+            >
+              <NFTCard
+                tokenId={token.tokenId}
+                metadata={token.metadata}
+                imageUrl={token.imageUrl}
+                isLoading={token.loading}
+                onClick={() => navigate(`/${collection.slug}/${token.tokenId}`)}
+              />
+            </div>
+          ))}
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }
