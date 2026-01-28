@@ -3,10 +3,11 @@ import { Collection } from '@/config/collections';
 interface CollectionCardProps {
   collection: Collection;
   previewImage?: string;
+  isLoading?: boolean;
   onClick?: () => void;
 }
 
-export const CollectionCard = ({ collection, previewImage, onClick }: CollectionCardProps) => {
+export const CollectionCard = ({ collection, previewImage, isLoading, onClick }: CollectionCardProps) => {
   return (
     <button
       onClick={onClick}
@@ -14,7 +15,9 @@ export const CollectionCard = ({ collection, previewImage, onClick }: Collection
       aria-label={`View ${collection.name} collection`}
     >
       <div className="aspect-square overflow-hidden bg-muted">
-        {previewImage ? (
+        {isLoading ? (
+          <div className="w-full h-full bg-muted animate-pulse" aria-hidden="true" />
+        ) : previewImage ? (
           <img
             src={previewImage}
             alt={`Preview image from ${collection.name} collection`}

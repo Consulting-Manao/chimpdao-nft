@@ -5,35 +5,49 @@ import { PageHeader } from '@/components/PageHeader';
 import { Footer } from '@/components/Footer';
 import { collections } from '@/config/collections';
 import { getTokenUri } from '@/services/stellar';
-import { fetchNFTMetadata, ipfsToHttp } from '@/services/ipfs';
+import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
+import { getCached, setCache, getCacheKey } from '@/services/cache';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const [previews, setPreviews] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(true);
+  const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set(collections.map(c => c.contractId)));
 
   useEffect(() => {
-    const loadPreviews = async () => {
-      setLoading(true);
-      const results = await Promise.allSettled(
-        collections.map(async (collection) => {
-          const uri = await getTokenUri(collection.contractId, 0);
-          const metadata = await fetchNFTMetadata(uri);
-          return { contractId: collection.contractId, image: metadata.image };
-        })
-      );
+    // Load previews progressively - each collection updates as it completes
+    collections.forEach(async (collection) => {
+      const cacheKey = getCacheKey(collection.contractId, 0);
+      const cached = getCached<{ metadata: NFTMetadata; imageUrl: string }>(cacheKey);
       
-      const newPreviews: Record<string, string> = {};
-      results.forEach((result) => {
-        if (result.status === 'fulfilled' && result.value.image) {
-          newPreviews[result.value.contractId] = ipfsToHttp(result.value.image);
+      if (cached?.imageUrl) {
+        setPreviews(prev => ({ ...prev, [collection.contractId]: cached.imageUrl }));
+        setLoadingIds(prev => {
+          const next = new Set(prev);
+          next.delete(collection.contractId);
+          return next;
+        });
+        return;
+      }
+      
+      try {
+        const uri = await getTokenUri(collection.contractId, 0);
+        const metadata = await fetchNFTMetadata(uri);
+        const imageUrl = metadata.image ? ipfsToHttp(metadata.image) : undefined;
+        
+        if (imageUrl) {
+          setCache(cacheKey, { metadata, imageUrl });
+          setPreviews(prev => ({ ...prev, [collection.contractId]: imageUrl }));
         }
-      });
-      setPreviews(newPreviews);
-      setLoading(false);
-    };
-    
-    loadPreviews();
+      } catch {
+        // Silent fail - card will show without image
+      } finally {
+        setLoadingIds(prev => {
+          const next = new Set(prev);
+          next.delete(collection.contractId);
+          return next;
+        });
+      }
+    });
   }, []);
 
   return (
@@ -47,25 +61,20 @@ export default function LandingPage() {
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading ? (
-            <div className="col-span-full text-center py-12" role="status" aria-label="Loading collections">
-              <p className="text-muted-foreground">Loading collections...</p>
+          {collections.map((collection, idx) => (
+            <div
+              key={collection.contractId}
+              className="animate-fade-in"
+              style={{ animationDelay: `${idx * 100}ms` }}
+            >
+              <CollectionCard
+                collection={collection}
+                previewImage={previews[collection.contractId]}
+                isLoading={loadingIds.has(collection.contractId)}
+                onClick={() => navigate(`/${collection.slug}`)}
+              />
             </div>
-          ) : (
-            collections.map((collection, idx) => (
-              <div
-                key={collection.contractId}
-                className="animate-fade-in"
-                style={{ animationDelay: `${idx * 100}ms` }}
-              >
-                <CollectionCard
-                  collection={collection}
-                  previewImage={previews[collection.contractId]}
-                  onClick={() => navigate(`/${collection.slug}`)}
-                />
-              </div>
-            ))
-          )}
+          ))}
         </div>
 
         {collections.length === 0 && (

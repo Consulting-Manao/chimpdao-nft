@@ -95,7 +95,8 @@ export default function CollectionPage() {
     );
   }
 
-  if (loading || !collection) {
+  // Show skeleton only if collection lookup is pending (not for token loading)
+  if (!collection) {
     return (
       <div className="min-h-screen flex flex-col">
         <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full">
