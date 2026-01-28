@@ -33,15 +33,6 @@ export default function TokenPage() {
   const isValidTokenId = !isNaN(tokenIdNum) && tokenIdNum >= 0 && 
     (collection ? tokenIdNum < collection.tokenCount : true);
 
-  // Play gorilla sound on page load
-  useEffect(() => {
-    const audio = new Audio('/sounds/gorilla-chest.m4a');
-    audio.volume = 0.5;
-    audio.play().catch(() => {
-      // Autoplay may be blocked by browser - that's fine
-    });
-  }, []);
-
   useEffect(() => {
     if (!contractId || !collection) return;
     if (!isValidTokenId) return;
