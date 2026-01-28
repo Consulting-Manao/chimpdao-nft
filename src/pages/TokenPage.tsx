@@ -196,7 +196,7 @@ export default function TokenPage() {
                         traitType={attr.trait_type}
                         value={attr.value}
                         highlighted={isMerch}
-                        link={isMerch ? 'https://shop.chimpdao.xyz' : undefined}
+                        link={isMerch ? `https://shop.chimpdao.xyz/products/${attr.value}` : undefined}
                       />
                     );
                   })}
