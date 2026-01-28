@@ -15,13 +15,6 @@ export const collections: Collection[] = [
     tokenCount: 100,
     description: "A collection of 100 cute Chimpys wearing the PaltaLabs shirt and different accessories.",
   },
-  {
-    slug: "pudgy-2",
-    name: "Pudgy Penguin",
-    contractId: "CCKHNE3SOVW3OQRFEES6O2KGZMU2BTS2GT4SMLOWVOOLZ7D6IUTMVEKP",
-    tokenCount: 5,
-    description: "Pudgy Penguin NFT collection 2",
-  },
 ];
 
 export function getCollectionBySlug(slug: string): Collection | undefined {
