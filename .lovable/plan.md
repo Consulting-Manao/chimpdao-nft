@@ -1,107 +1,70 @@
 
 
-## Restore Full Grid with Placeholder Cards for Unclaimed NFTs
+## Fix Unclaimed Token Click Behavior
 
 ### Overview
-Restore the grid to show all tokens (0 to tokenCount-1). Claimed tokens display their images and metadata. Unclaimed tokens appear as placeholder cards showing just the token number.
+Restore navigation for unclaimed tokens so users see the "Token Not Yet Claimed" message, and suppress the gorilla sound for unclaimed tokens only.
 
 ### Current Problem
-The `loadToken` function returns `null` for unclaimed tokens, which then get filtered out entirely from the grid.
+1. `onClick` is set to `undefined` for unclaimed tokens, preventing navigation to the token page
+2. The gorilla sound still plays because `handleClick` always calls `playGorillaSound()` before checking `onClick`
+3. Users can't see the helpful "unclaimed" message on the TokenPage
 
 ### Solution
-Change the approach so unclaimed tokens are included in the grid but marked as "unclaimed" with no metadata/image. They'll render as placeholder cards.
+Pass a `claimed` prop to NFTCard to control sound behavior, but always allow navigation.
 
 ---
 
 ### Changes
 
-#### `src/pages/CollectionPage.tsx`
+#### `src/components/NFTCard.tsx`
 
-**1. Update `TokenData` interface to include ownership status:**
+**1. Add `claimed` prop to interface:**
 ```typescript
-interface TokenData {
+interface NFTCardProps {
   tokenId: number;
   metadata?: NFTMetadata;
   imageUrl?: string;
-  loading: boolean;
-  error?: boolean;
-  claimed: boolean; // NEW: track if token has an owner
+  isLoading?: boolean;
+  onClick?: () => void;
+  claimed?: boolean; // NEW: controls whether sound plays
 }
 ```
 
-**2. Modify `loadToken` to return placeholder data for unclaimed tokens instead of null:**
+**2. Update component to only play sound when claimed:**
 ```typescript
-const loadToken = useCallback(async (tokenId: number, contractAddress: string): Promise<TokenData> => {
-  const cacheKey = getCacheKey(contractAddress, tokenId);
-  const cached = getCached<{ metadata: NFTMetadata; imageUrl: string; owner?: string }>(cacheKey);
-  
-  // If cached with owner data, use it
-  if (cached && (tokenId === 0 || cached.owner)) {
-    return { tokenId, metadata: cached.metadata, imageUrl: cached.imageUrl, loading: false, claimed: true };
-  }
+export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick, claimed = true }: NFTCardProps) {
+  const name = metadata?.name || `Token #${tokenId}`;
 
-  // Check ownership for tokens other than #0
-  if (tokenId !== 0) {
-    const owner = await getTokenOwner(contractAddress, tokenId);
-    if (!owner) {
-      // Return placeholder for unclaimed token (don't return null)
-      return { tokenId, loading: false, claimed: false };
+  const handleClick = () => {
+    if (claimed) {
+      playGorillaSound();
     }
-    
-    // Has owner but no cached metadata - update cache and fetch metadata
-    if (cached) {
-      setCache(cacheKey, { ...cached, owner });
-      return { tokenId, metadata: cached.metadata, imageUrl: cached.imageUrl, loading: false, claimed: true };
-    }
-  }
-
-  // Fetch metadata for claimed tokens
-  const uri = await getTokenUri(contractAddress, tokenId);
-  const metadata = await fetchNFTMetadata(uri);
-  const imageUrl = metadata.image ? ipfsToHttp(metadata.image) : undefined;
-  
-  const owner = tokenId === 0 ? await getTokenOwner(contractAddress, tokenId) : undefined;
-  
-  setCache(cacheKey, { metadata, imageUrl, owner: owner || undefined });
-  return { tokenId, metadata, imageUrl, loading: false, claimed: true };
-}, []);
+    onClick?.();
+  };
+  // ... rest unchanged
+}
 ```
 
-**3. Update the results processing to handle all tokens (no filtering):**
-```typescript
-const results = await Promise.allSettled(
-  tokenIds.map(id => loadToken(id, collection.contractId))
-);
+#### `src/pages/CollectionPage.tsx`
 
-const allTokens = results
-  .map((result, idx) => 
-    result.status === 'fulfilled' 
-      ? result.value 
-      : { tokenId: idx, loading: false, claimed: false } // Fallback for errors
-  );
-
-setTokens(allTokens);
-```
-
-**4. Update NFTCard rendering to handle unclaimed tokens:**
-The NFTCard already handles missing metadata/imageUrl gracefully - it shows a placeholder with `#{tokenId}`. We just need to make unclaimed tokens non-clickable:
-
+**Update NFTCard usage to always navigate but pass `claimed` prop:**
 ```typescript
 <NFTCard
   tokenId={token.tokenId}
   metadata={token.metadata}
   imageUrl={token.imageUrl}
   isLoading={token.loading}
-  onClick={token.claimed ? () => navigate(`/${collection.slug}/${token.tokenId}`) : undefined}
+  claimed={token.claimed}
+  onClick={() => navigate(`/${collection.slug}/${token.tokenId}`)}
 />
 ```
 
 ---
 
 ### Technical Notes
-- Return type of `loadToken` changes from `TokenData | null` to `TokenData`
-- New `claimed` boolean in `TokenData` indicates if token has an owner
-- Unclaimed tokens render as placeholders (existing NFTCard behavior)
-- Unclaimed tokens are not clickable (no navigation)
-- Grid remains full with all token positions visible
+- Navigation always happens (so unclaimed tokens show the "Token Not Yet Claimed" page)
+- Sound only plays for claimed tokens
+- `claimed` defaults to `true` so existing usages don't break
+- TokenPage already handles unclaimed tokens with a user-friendly error message
 
