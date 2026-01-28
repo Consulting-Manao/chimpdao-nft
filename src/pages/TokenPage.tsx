@@ -161,6 +161,7 @@ export default function TokenPage() {
         <PageHeader
           title={metadata?.name || `Token #${tokenId}`}
           showBack
+          backTo={`/${collection.slug}`}
           yellowTitle
         />
 
