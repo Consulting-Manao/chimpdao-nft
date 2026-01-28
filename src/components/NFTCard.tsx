@@ -8,8 +8,19 @@ interface NFTCardProps {
   onClick?: () => void;
 }
 
+const playGorillaSound = () => {
+  const audio = new Audio('/sounds/gorilla-chest.m4a');
+  audio.volume = 0.5;
+  audio.play().catch(() => {});
+};
+
 export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick }: NFTCardProps) {
   const name = metadata?.name || `Token #${tokenId}`;
+
+  const handleClick = () => {
+    playGorillaSound();
+    onClick?.();
+  };
 
   if (isLoading) {
     return (
@@ -24,7 +35,7 @@ export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick }: NFT
 
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className="glass-card-hover w-full text-left overflow-hidden group"
       aria-label={`View details for ${name}`}
     >
