@@ -162,7 +162,8 @@ export default function CollectionPage() {
                 metadata={token.metadata}
                 imageUrl={token.imageUrl}
                 isLoading={token.loading}
-                onClick={token.claimed ? () => navigate(`/${collection.slug}/${token.tokenId}`) : undefined}
+                claimed={token.claimed}
+                onClick={() => navigate(`/${collection.slug}/${token.tokenId}`)}
               />
             </div>
           ))}

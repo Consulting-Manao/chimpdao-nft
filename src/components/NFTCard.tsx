@@ -6,6 +6,7 @@ interface NFTCardProps {
   imageUrl?: string;
   isLoading?: boolean;
   onClick?: () => void;
+  claimed?: boolean;
 }
 
 const playGorillaSound = () => {
@@ -14,11 +15,13 @@ const playGorillaSound = () => {
   audio.play().catch(() => {});
 };
 
-export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick }: NFTCardProps) {
+export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick, claimed = true }: NFTCardProps) {
   const name = metadata?.name || `Token #${tokenId}`;
 
   const handleClick = () => {
-    playGorillaSound();
+    if (claimed) {
+      playGorillaSound();
+    }
     onClick?.();
   };
 
