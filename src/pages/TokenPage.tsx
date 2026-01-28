@@ -67,7 +67,13 @@ export default function TokenPage() {
 
         setCache(cacheKey, { metadata: meta, imageUrl: imgUrl, ipfsUri: uri });
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load token');
+        const errorMsg = err instanceof Error ? err.message : 'Failed to load token';
+        // Contract error #200 or simulation errors typically mean token not yet minted
+        if (errorMsg.includes('Simulation error') || errorMsg.includes('#200')) {
+          setError('unclaimed');
+        } else {
+          setError(errorMsg);
+        }
       } finally {
         setLoading(false);
       }
@@ -126,10 +132,14 @@ export default function TokenPage() {
   }
 
   if (error) {
+    const isUnclaimed = error === 'unclaimed';
     return (
       <ErrorState
-        title="Error loading token"
-        message={error}
+        title={isUnclaimed ? "Token Not Yet Claimed" : "Error loading token"}
+        message={isUnclaimed 
+          ? "This token hasn't been claimed yet. Once claimed, you'll be able to view its details here."
+          : error
+        }
         action={{ label: "View Collection", to: `/${collection.slug}` }}
       />
     );
