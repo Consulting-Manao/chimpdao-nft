@@ -6,11 +6,12 @@ interface PageHeaderProps {
   subtitle?: string;
   showBack?: boolean;
   backTo?: string;
+  backLabel?: string;
   icon?: string;
   yellowTitle?: boolean;
 }
 
-export function PageHeader({ title, subtitle, showBack, backTo, icon, yellowTitle }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, showBack, backTo, backLabel, icon, yellowTitle }: PageHeaderProps) {
   const navigate = useNavigate();
 
   return (
@@ -19,10 +20,10 @@ export function PageHeader({ title, subtitle, showBack, backTo, icon, yellowTitl
         <button
           onClick={() => navigate(backTo || '/')}
           className="mb-4 inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Go back to previous page"
+          aria-label={backLabel || "Go back"}
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          <span className="text-sm">Back</span>
+          <span className="text-sm">{backLabel || "Back"}</span>
         </button>
       )}
       <div className="flex items-center gap-3">
