@@ -1,85 +1,57 @@
 
 
-## Plan: User-Friendly "Token Not Claimed" Message
+## Plan: Remove Gray Card from NFT Image
 
 ### Problem
 
-When a token hasn't been claimed yet, the contract returns error code `#200`. Currently, the raw technical error is shown to users:
+The NFT image on the token detail page is wrapped in a `glass-card` container, which adds a gray background. The BAYC reference shows the image displayed directly with just rounded corners, sitting on the page background without any card wrapper.
 
-> "Simulation error: HostError: Error(Contract, #200)"
+### Current State (Line 158)
 
-This is confusing and not helpful. Users just need to know the token hasn't been claimed yet.
+```html
+<div className="glass-card overflow-hidden">
+  <img ... />
+</div>
+```
 
----
+### Solution
 
-## Solution
-
-Detect when the error indicates an unclaimed token and show a friendly message instead.
+Remove `glass-card` and replace with simple rounded corners styling.
 
 **File:** `src/pages/TokenPage.tsx`
 
-### Change 1: Detect unclaimed token errors (Lines 69-70)
+### Change 1: Main image container (Line 158)
 
-In the catch block, check if the error message contains contract error indicators (like `#200` or simulation errors) and set a user-friendly message:
+Replace `glass-card` with just `rounded-xl overflow-hidden`:
 
-```typescript
-// Before
-catch (err) {
-  setError(err instanceof Error ? err.message : 'Failed to load token');
-}
+```
+Before:
+<div className="glass-card overflow-hidden">
 
-// After
-catch (err) {
-  const errorMsg = err instanceof Error ? err.message : 'Failed to load token';
-  // Contract error #200 or simulation errors typically mean token not yet minted
-  if (errorMsg.includes('Simulation error') || errorMsg.includes('#200')) {
-    setError('unclaimed');
-  } else {
-    setError(errorMsg);
-  }
-}
+After:
+<div className="rounded-xl overflow-hidden">
 ```
 
-### Change 2: Show friendly unclaimed message (Lines 128-136)
+### Change 2: Loading state image container (Line 122)
 
-Update the error display to show a welcoming message for unclaimed tokens:
+Also update the loading skeleton for consistency:
 
-```typescript
-// Before
-if (error) {
-  return (
-    <ErrorState
-      title="Error loading token"
-      message={error}
-      action={{ label: "View Collection", to: `/${collection.slug}` }}
-    />
-  );
-}
+```
+Before:
+<div className="glass-card overflow-hidden max-w-lg mx-auto" ...>
 
-// After
-if (error) {
-  const isUnclaimed = error === 'unclaimed';
-  return (
-    <ErrorState
-      title={isUnclaimed ? "Token Not Yet Claimed" : "Error loading token"}
-      message={isUnclaimed 
-        ? "This token hasn't been claimed yet. Once claimed, you'll be able to view its details here."
-        : error
-      }
-      action={{ label: "View Collection", to: `/${collection.slug}` }}
-    />
-  );
-}
+After:
+<div className="rounded-xl overflow-hidden max-w-lg mx-auto" ...>
 ```
 
 ---
 
-## Result
+### Summary
 
-| Before | After |
-|--------|-------|
-| "Error loading token" | "Token Not Yet Claimed" |
-| "Simulation error: HostError: Error(Contract, #200)..." | "This token hasn't been claimed yet. Once claimed, you'll be able to view its details here." |
+| Location | Change |
+|----------|--------|
+| Line 122 | Loading skeleton: `glass-card` to `rounded-xl` |
+| Line 158 | Main image: `glass-card` to `rounded-xl` |
 
-Clean, friendly, and tells users exactly what's happening.
+The image will now display cleanly with just rounded corners, matching the BAYC style - no gray card background.
 
