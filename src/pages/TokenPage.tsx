@@ -186,8 +186,7 @@ export default function TokenPage() {
           <div className="space-y-6">
             {/* Attributes */}
             {metadata?.attributes && metadata.attributes.length > 0 && (
-              <section aria-labelledby="attributes-heading">
-                <h2 id="attributes-heading" className="text-sm font-medium text-muted-foreground mb-3">Attributes</h2>
+              <section aria-label="Token attributes">
                 <div className="grid grid-cols-2 gap-3">
                   {metadata.attributes.map((attr, idx) => {
                     const isMerch = attr.trait_type.toUpperCase() === 'MERCH';
