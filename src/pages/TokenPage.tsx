@@ -161,6 +161,7 @@ export default function TokenPage() {
         <PageHeader
           title={metadata?.name || `Token #${tokenId}`}
           showBack
+          yellowTitle
         />
 
         <div className="grid md:grid-cols-2 gap-8">
