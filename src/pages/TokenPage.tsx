@@ -119,7 +119,7 @@ export default function TokenPage() {
         <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full">
           <PageHeader title="Loading..." showBack />
           <div 
-            className="rounded-xl overflow-hidden max-w-lg mx-auto"
+            className="rounded-3xl overflow-hidden max-w-lg mx-auto"
             role="status"
             aria-label="Loading token details"
           >
@@ -155,7 +155,7 @@ export default function TokenPage() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Image */}
-          <div className="rounded-xl overflow-hidden">
+          <div className="rounded-3xl overflow-hidden">
             {imageUrl ? (
               <img
                 src={imageUrl}
