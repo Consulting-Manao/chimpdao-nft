@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { ErrorState } from '@/components/ErrorState';
 import { Footer } from '@/components/Footer';
 import { getCollectionBySlug, getCollectionByContractId, type Collection } from '@/config/collections';
-import { getTokenUri } from '@/services/stellar';
+import { getTokenUri, getTokenOwner } from '@/services/stellar';
 import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
 
@@ -44,19 +44,36 @@ export default function CollectionPage() {
     setCollection(found);
   }, [contractId]);
 
-  const loadToken = useCallback(async (tokenId: number, contractAddress: string): Promise<TokenData> => {
+  const loadToken = useCallback(async (tokenId: number, contractAddress: string): Promise<TokenData | null> => {
     const cacheKey = getCacheKey(contractAddress, tokenId);
-    const cached = getCached<{ metadata: NFTMetadata; imageUrl: string }>(cacheKey);
+    const cached = getCached<{ metadata: NFTMetadata; imageUrl: string; owner?: string }>(cacheKey);
     
-    if (cached) {
+    // If cached with owner data, use it
+    if (cached && (tokenId === 0 || cached.owner)) {
       return { tokenId, metadata: cached.metadata, imageUrl: cached.imageUrl, loading: false };
     }
 
+    // Token #0 always shown; others need owner check
+    if (tokenId !== 0) {
+      const owner = await getTokenOwner(contractAddress, tokenId);
+      if (!owner) return null; // Skip unclaimed
+      
+      // If we have cached metadata but no owner, update cache with owner
+      if (cached) {
+        setCache(cacheKey, { ...cached, owner });
+        return { tokenId, metadata: cached.metadata, imageUrl: cached.imageUrl, loading: false };
+      }
+    }
+
+    // Fetch metadata
     const uri = await getTokenUri(contractAddress, tokenId);
     const metadata = await fetchNFTMetadata(uri);
     const imageUrl = metadata.image ? ipfsToHttp(metadata.image) : undefined;
     
-    setCache(cacheKey, { metadata, imageUrl });
+    // For token #0, fetch owner too (for consistency in cache)
+    const owner = tokenId === 0 ? await getTokenOwner(contractAddress, tokenId) : undefined;
+    
+    setCache(cacheKey, { metadata, imageUrl, owner: owner || undefined });
     return { tokenId, metadata, imageUrl, loading: false };
   }, []);
 
@@ -74,11 +91,11 @@ export default function CollectionPage() {
         tokenIds.map(id => loadToken(id, collection.contractId))
       );
 
-      setTokens(results.map((result, idx) => 
-        result.status === 'fulfilled' 
-          ? result.value 
-          : { tokenId: idx, loading: false, error: true }
-      ));
+      const validTokens = results
+        .map(result => result.status === 'fulfilled' ? result.value : null)
+        .filter((token): token is TokenData => token !== null);
+
+      setTokens(validTokens);
       setLoading(false);
     };
 

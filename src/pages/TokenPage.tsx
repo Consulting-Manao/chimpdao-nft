@@ -38,19 +38,33 @@ export default function TokenPage() {
     if (!isValidTokenId) return;
 
     const actualContractId = collection.contractId;
+    const cacheKey = getCacheKey(actualContractId, tokenIdNum);
 
-    // Load metadata (cached)
-    const loadMetadata = async () => {
+    const loadTokenData = async () => {
       setLoading(true);
       setError(null);
 
-      const cacheKey = getCacheKey(actualContractId, tokenIdNum);
-      const cached = getCached<{ metadata: NFTMetadata; imageUrl: string; ipfsUri: string }>(cacheKey);
+      // Always fetch fresh owner (updates cache)
+      const ownerAddress = await getTokenOwner(actualContractId, tokenIdNum);
+      setOwner(ownerAddress);
+      setOwnerLoading(false);
+
+      // Token #0 always valid; others need owner
+      if (tokenIdNum !== 0 && !ownerAddress) {
+        setError('unclaimed');
+        setLoading(false);
+        return;
+      }
+
+      // Check cache for metadata
+      const cached = getCached<{ metadata: NFTMetadata; imageUrl: string; ipfsUri: string; owner?: string }>(cacheKey);
 
       if (cached) {
         setMetadata(cached.metadata);
         setImageUrl(cached.imageUrl);
         setIpfsUri(cached.ipfsUri);
+        // Update cache with fresh owner
+        setCache(cacheKey, { ...cached, owner: ownerAddress || undefined });
         setLoading(false);
         return;
       }
@@ -65,30 +79,16 @@ export default function TokenPage() {
         const imgUrl = meta.image ? ipfsToHttp(meta.image) : null;
         setImageUrl(imgUrl);
 
-        setCache(cacheKey, { metadata: meta, imageUrl: imgUrl, ipfsUri: uri });
+        setCache(cacheKey, { metadata: meta, imageUrl: imgUrl, ipfsUri: uri, owner: ownerAddress || undefined });
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to load token';
-        // Contract error #200 or simulation errors typically mean token not yet minted
-        if (errorMsg.includes('Simulation error') || errorMsg.includes('#200')) {
-          setError('unclaimed');
-        } else {
-          setError(errorMsg);
-        }
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
     };
 
-    // Load owner (not cached - can change)
-    const loadOwner = async () => {
-      setOwnerLoading(true);
-      const ownerAddress = await getTokenOwner(actualContractId, tokenIdNum);
-      setOwner(ownerAddress);
-      setOwnerLoading(false);
-    };
-
-    loadMetadata();
-    loadOwner();
+    loadTokenData();
   }, [contractId, tokenIdNum, collection, isValidTokenId]);
 
   // Collection not found
