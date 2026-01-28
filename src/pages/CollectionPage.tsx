@@ -123,6 +123,7 @@ export default function CollectionPage() {
           title={collection.name}
           subtitle={collection.description}
           showBack
+          backTo="/"
           yellowTitle
         />
 
