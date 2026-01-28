@@ -162,6 +162,7 @@ export default function TokenPage() {
           title={metadata?.name || `Token #${tokenId}`}
           showBack
           backTo={`/${collection.slug}`}
+          backLabel="Back to collection"
           yellowTitle
         />
 

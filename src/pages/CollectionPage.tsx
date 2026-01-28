@@ -124,6 +124,7 @@ export default function CollectionPage() {
           subtitle={collection.description}
           showBack
           backTo="/"
+          backLabel="Back to the jungle"
           yellowTitle
         />
 
