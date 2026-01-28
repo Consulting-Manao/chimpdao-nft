@@ -1,75 +1,143 @@
 
 
-## Plan: Simplify Back Button Navigation
+## Plan: Highlight MERCH Attribute with Purple Glow Link
 
-### Current Issue
+### Overview
 
-The back button uses `navigate(-1)` (browser history), which is unpredictable:
-- If user opened a token page directly via URL, pressing back might exit the app
-- If user came from an external link, back goes to that external site
-- Behavior depends on navigation history, not logical hierarchy
+Add special styling and linking for the "MERCH" attribute on the NFT detail page, with a purple glow effect matching the ChimpDAO design system. The architecture will support future linking strategies (slugs, IPFS metadata).
 
-### Solution
+### Design
 
-Make the back button navigate to the logical parent in the hierarchy:
+The MERCH attribute will stand out with:
+- Purple text color using the existing `--color-chimp-purple`
+- Purple glow effect (similar to the yellow `.text-glow` but purple)
+- Clickable link to `shop.chimpdao.xyz`
+- External link icon to indicate it opens a new tab
+
+### Architecture for Future Linking
+
+The solution will be extensible for future link types:
 
 ```
-Token Page → Collection Page → Landing Page
+Current:     MERCH value → shop.chimpdao.xyz (base shop URL)
+Future v1:   MERCH value → shop.chimpdao.xyz/{slug} (e.g., /palta_shirt)
+Future v2:   MERCH value → IPFS metadata link (from additional NFT metadata)
 ```
+
+The `AttributeBadge` component will accept an optional `link` prop, making it easy to later derive links from:
+- A slug mapping config
+- Additional metadata fields in the NFT JSON
+- A separate IPFS link field
+
+---
 
 ### Changes
 
-**File:** `src/components/PageHeader.tsx`
+#### File: `src/index.css`
 
-Add a `backTo` prop that specifies the explicit destination:
+Add a purple glow utility class to match the yellow one:
+
+```css
+/* Purple glow effect for MERCH highlights */
+.text-glow-purple {
+  color: hsl(270 100% 60%);
+  text-shadow:
+    0 0 10px hsl(270 100% 60% / 0.5),
+    0 0 20px hsl(270 100% 60% / 0.3),
+    0 0 40px hsl(270 100% 60% / 0.15);
+}
+```
+
+---
+
+#### File: `src/components/AttributeBadge.tsx`
+
+Extend the component to support:
+- `highlighted` prop for purple glow styling
+- `link` prop for making the value clickable
 
 ```typescript
-interface PageHeaderProps {
-  title: string;
-  subtitle?: string;
-  showBack?: boolean;
-  backTo?: string;  // NEW: explicit back destination
-  icon?: string;
-  yellowTitle?: boolean;
+interface AttributeBadgeProps {
+  traitType: string;
+  value: string | number;
+  highlighted?: boolean;  // Purple glow styling
+  link?: string;          // External link URL
 }
 
-// Change onClick:
-onClick={() => navigate(backTo || '/')}
+export function AttributeBadge({ traitType, value, highlighted, link }: AttributeBadgeProps) {
+  const valueContent = (
+    <p className={`text-sm font-medium ${highlighted ? 'text-glow-purple' : ''}`}>
+      {value}
+      {link && <ExternalLink className="inline h-3 w-3 ml-1" />}
+    </p>
+  );
+
+  return (
+    <div className={`glass-card p-3 space-y-1 ${highlighted ? 'border-purple-500/30' : ''}`}>
+      <p className="text-xs text-muted-foreground uppercase tracking-wide">
+        {traitType}
+      </p>
+      {link ? (
+        <a href={link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+          {valueContent}
+        </a>
+      ) : (
+        valueContent
+      )}
+    </div>
+  );
+}
 ```
 
-**File:** `src/pages/CollectionPage.tsx`
+---
 
-Pass the parent route:
+#### File: `src/pages/TokenPage.tsx`
+
+Update the attributes rendering to detect "MERCH" and apply special treatment:
 
 ```typescript
-<PageHeader
-  title={collection.name}
-  subtitle={collection.description}
-  showBack
-  backTo="/"
-  yellowTitle
-/>
+{metadata.attributes.map((attr, idx) => {
+  const isMerch = attr.trait_type.toUpperCase() === 'MERCH';
+  
+  return (
+    <AttributeBadge
+      key={idx}
+      traitType={attr.trait_type}
+      value={attr.value}
+      highlighted={isMerch}
+      link={isMerch ? 'https://shop.chimpdao.xyz' : undefined}
+    />
+  );
+})}
 ```
 
-**File:** `src/pages/TokenPage.tsx`
+---
 
-Pass the parent collection route:
+### Future Extensibility
+
+When you're ready for slug-based linking:
 
 ```typescript
-<PageHeader
-  title={metadata?.name || `Token #${tokenId}`}
-  showBack
-  backTo={`/${collection.slug}`}
-  yellowTitle
-/>
+// Option 1: Derive slug from value
+link={isMerch ? `https://shop.chimpdao.xyz/${slugify(attr.value)}` : undefined}
+
+// Option 2: Add a linkable_traits config
+const LINKABLE_TRAITS = {
+  'MERCH': (value) => `https://shop.chimpdao.xyz/${value.toLowerCase().replace(/ /g, '_')}`
+};
+
+// Option 3: Read from NFT metadata extension
+// If the NFT JSON includes: { "merch_link": "ipfs://..." }
+link={isMerch ? metadata.merch_link : undefined}
 ```
 
-### Result
+---
 
-| Page | Back Button Goes To |
-|------|---------------------|
-| Collection Page | Landing Page (`/`) |
-| Token Page | Collection Page (`/:slug`) |
+### Summary
 
-Simple, predictable, works correctly regardless of how the user arrived at the page.
+| File | Change |
+|------|--------|
+| `src/index.css` | Add `.text-glow-purple` class |
+| `src/components/AttributeBadge.tsx` | Add `highlighted` and `link` props |
+| `src/pages/TokenPage.tsx` | Detect MERCH attribute and apply special styling/link |
 
