@@ -1,71 +1,85 @@
 
 
-## Plan: Fix Footer to Match Reference + Remove Card Yellow Border
+## Plan: User-Friendly "Token Not Claimed" Message
 
-### Issues
+### Problem
 
-1. **Footer border** - Currently `border-transparent` but reference uses `border-border` (visible line)
-2. **Social icon backgrounds** - Currently `bg-white/10` but reference uses `bg-secondary` 
-3. **Social hover states** - Currently `hover:text-foreground` but reference uses `hover:text-primary` (yellow)
-4. **Right side links** - Missing yellow hover on "Stellar" and "SCF" text
-5. **Card hover border** - Yellow border on hover should be removed (glow is enough)
+When a token hasn't been claimed yet, the contract returns error code `#200`. Currently, the raw technical error is shown to users:
 
----
+> "Simulation error: HostError: Error(Contract, #200)"
 
-## Fix 1: Footer Styling
-
-**File:** `src/components/Footer.tsx`
-
-### Line 5 - Add visible border
-```
-border-transparent  →  border-border
-```
-
-### Lines 26 and 37 - Social icon styling (match reference exactly)
-```
-Current:
-bg-white/10 ... hover:text-foreground hover:bg-white/15 transition-colors
-
-Reference:
-bg-secondary ... hover:text-primary hover:bg-primary/10 transition-all duration-300
-```
-
-### Lines 54 and 71 - Right side links (add yellow hover + duration)
-```
-Current:
-hover:text-foreground transition-colors
-
-Reference:
-hover:text-foreground transition-colors duration-300
-```
-
-*(The reference uses hover:text-foreground for badges, but text-primary for social icons)*
+This is confusing and not helpful. Users just need to know the token hasn't been claimed yet.
 
 ---
 
-## Fix 2: Remove Yellow Border on Card Hover
+## Solution
 
-**File:** `src/index.css`
+Detect when the error indicates an unclaimed token and show a friendly message instead.
 
-### Line 111 - Remove yellow border from hover state
+**File:** `src/pages/TokenPage.tsx`
+
+### Change 1: Detect unclaimed token errors (Lines 69-70)
+
+In the catch block, check if the error message contains contract error indicators (like `#200` or simulation errors) and set a user-friendly message:
+
+```typescript
+// Before
+catch (err) {
+  setError(err instanceof Error ? err.message : 'Failed to load token');
+}
+
+// After
+catch (err) {
+  const errorMsg = err instanceof Error ? err.message : 'Failed to load token';
+  // Contract error #200 or simulation errors typically mean token not yet minted
+  if (errorMsg.includes('Simulation error') || errorMsg.includes('#200')) {
+    setError('unclaimed');
+  } else {
+    setError(errorMsg);
+  }
+}
 ```
-Current:
-border-color: hsl(50 100% 50% / 0.4);
 
-Change to:
-border-color: hsl(0 0% 40% / 0.25);
+### Change 2: Show friendly unclaimed message (Lines 128-136)
+
+Update the error display to show a welcoming message for unclaimed tokens:
+
+```typescript
+// Before
+if (error) {
+  return (
+    <ErrorState
+      title="Error loading token"
+      message={error}
+      action={{ label: "View Collection", to: `/${collection.slug}` }}
+    />
+  );
+}
+
+// After
+if (error) {
+  const isUnclaimed = error === 'unclaimed';
+  return (
+    <ErrorState
+      title={isUnclaimed ? "Token Not Yet Claimed" : "Error loading token"}
+      message={isUnclaimed 
+        ? "This token hasn't been claimed yet. Once claimed, you'll be able to view its details here."
+        : error
+      }
+      action={{ label: "View Collection", to: `/${collection.slug}` }}
+    />
+  );
+}
 ```
-
-This keeps the original subtle border color on hover instead of turning yellow. The yellow glow effect remains.
 
 ---
 
-## Summary
+## Result
 
-| File | Line | Change |
-|------|------|--------|
-| `Footer.tsx` | 5 | `border-transparent` → `border-border` |
-| `Footer.tsx` | 26 | `bg-white/10` → `bg-secondary`, hover to `hover:text-primary hover:bg-primary/10 transition-all duration-300` |
-| `Footer.tsx` | 37 | Same as line 26 |
-| `index.css` | 111 | `border-color: hsl(50 100% 50% / 0.4)` → `border-color: hsl(0 0% 40% / 0.25)` |
+| Before | After |
+|--------|-------|
+| "Error loading token" | "Token Not Yet Claimed" |
+| "Simulation error: HostError: Error(Contract, #200)..." | "This token hasn't been claimed yet. Once claimed, you'll be able to view its details here." |
+
+Clean, friendly, and tells users exactly what's happening.
 
