@@ -166,14 +166,14 @@ export default function TokenPage() {
           yellowTitle
         />
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 items-stretch">
           {/* Image */}
           <div className="rounded-3xl overflow-hidden">
             {imageUrl ? (
               <img
                 src={imageUrl}
                 alt={metadata?.name || `Token #${tokenId}`}
-                className="w-full h-auto rounded-3xl"
+                className="w-full h-full object-cover rounded-3xl"
               />
             ) : (
               <div className="aspect-square flex items-center justify-center bg-muted rounded-3xl" aria-hidden="true">
@@ -183,7 +183,7 @@ export default function TokenPage() {
           </div>
 
           {/* Details */}
-          <div className="space-y-6">
+          <div className="flex flex-col gap-3">
             {/* Attributes */}
             {metadata?.attributes && metadata.attributes.length > 0 && (
               <section aria-label="Token attributes">
@@ -205,7 +205,7 @@ export default function TokenPage() {
             )}
 
             {/* Technical Info */}
-            <div className="glass-card p-4 space-y-3">
+            <div className="glass-card p-4 space-y-3 flex-1 flex flex-col">
               <h2 className="text-sm font-medium text-muted-foreground">Details</h2>
               
               <dl className="space-y-2 text-sm">
