@@ -189,13 +189,18 @@ export default function TokenPage() {
               <section aria-labelledby="attributes-heading">
                 <h2 id="attributes-heading" className="text-sm font-medium text-muted-foreground mb-3">Attributes</h2>
                 <div className="grid grid-cols-2 gap-3">
-                  {metadata.attributes.map((attr, idx) => (
-                    <AttributeBadge
-                      key={idx}
-                      traitType={attr.trait_type}
-                      value={attr.value}
-                    />
-                  ))}
+                  {metadata.attributes.map((attr, idx) => {
+                    const isMerch = attr.trait_type.toUpperCase() === 'MERCH';
+                    return (
+                      <AttributeBadge
+                        key={idx}
+                        traitType={attr.trait_type}
+                        value={attr.value}
+                        highlighted={isMerch}
+                        link={isMerch ? 'https://shop.chimpdao.xyz' : undefined}
+                      />
+                    );
+                  })}
                 </div>
               </section>
             )}
