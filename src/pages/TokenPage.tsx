@@ -146,8 +146,18 @@ export default function TokenPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full">
+    <div className="min-h-screen flex flex-col relative">
+      {/* Background Pattern */}
+      <div 
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: 'url(/token-bg-pattern.png)',
+          backgroundSize: '800px',
+          backgroundRepeat: 'repeat'
+        }}
+        aria-hidden="true"
+      />
+      <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full relative z-10">
         <PageHeader
           title={metadata?.name || `Token #${tokenId}`}
           showBack
@@ -160,10 +170,10 @@ export default function TokenPage() {
               <img
                 src={imageUrl}
                 alt={metadata?.name || `Token #${tokenId}`}
-                className="w-full h-auto"
+                className="w-full h-auto rounded-3xl"
               />
             ) : (
-              <div className="aspect-square flex items-center justify-center bg-muted" aria-hidden="true">
+              <div className="aspect-square flex items-center justify-center bg-muted rounded-3xl" aria-hidden="true">
                 <span className="text-muted-foreground">No image</span>
               </div>
             )}
@@ -171,13 +181,6 @@ export default function TokenPage() {
 
           {/* Details */}
           <div className="space-y-6">
-            {metadata?.description && (
-              <div className="glass-card p-4">
-                <h2 className="text-sm font-medium text-muted-foreground mb-2">Description</h2>
-                <p className="text-sm">{metadata.description}</p>
-              </div>
-            )}
-
             {/* Attributes */}
             {metadata?.attributes && metadata.attributes.length > 0 && (
               <section aria-labelledby="attributes-heading">
@@ -206,11 +209,6 @@ export default function TokenPage() {
                   </dd>
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Token ID</dt>
-                  <dd className="font-mono">{tokenId}</dd>
-                </div>
-
                 <div className="flex items-center justify-between">
                   <dt className="text-muted-foreground">Owner</dt>
                   <dd>
@@ -241,17 +239,6 @@ export default function TokenPage() {
                   </div>
                 )}
 
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Collection</dt>
-                  <dd>
-                    <Link
-                      to={`/${collection.slug}`}
-                      className="text-primary hover:underline"
-                    >
-                      {collection.name}
-                    </Link>
-                  </dd>
-                </div>
               </dl>
             </div>
           </div>
