@@ -21,7 +21,7 @@ export default function OGCard() {
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Logo */}
           <img 
-            src="/chimp-joystick.png" 
+            src="/monkey-head.png" 
             alt="ChimpDAO" 
             className="w-48 h-48 mb-8"
           />
