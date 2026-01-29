@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { Footer } from '@/components/Footer';
 import { collections } from '@/config/collections';
 import { getTokenUri } from '@/services/stellar';
-import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
+import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
 
 export default function LandingPage() {
@@ -32,7 +32,7 @@ export default function LandingPage() {
       try {
         const uri = await getTokenUri(collection.contractId, 0);
         const metadata = await fetchNFTMetadata(uri);
-        const imageUrl = metadata.image ? ipfsToHttp(metadata.image) : undefined;
+        const imageUrl = metadata.image ? toHttpUrl(metadata.image) : undefined;
         
         if (imageUrl) {
           setCache(cacheKey, { metadata, imageUrl });

@@ -6,7 +6,7 @@ import { ErrorState } from '@/components/ErrorState';
 import { Footer } from '@/components/Footer';
 import { getCollectionBySlug, getCollectionByContractId, type Collection } from '@/config/collections';
 import { getTokenUri, getTokenOwner } from '@/services/stellar';
-import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
+import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
 
 interface TokenData {
@@ -72,7 +72,7 @@ export default function CollectionPage() {
     // Fetch metadata for claimed tokens
     const uri = await getTokenUri(contractAddress, tokenId);
     const metadata = await fetchNFTMetadata(uri);
-    const imageUrl = metadata.image ? ipfsToHttp(metadata.image) : undefined;
+    const imageUrl = metadata.image ? toHttpUrl(metadata.image) : undefined;
     
     const owner = tokenId === 0 ? await getTokenOwner(contractAddress, tokenId) : undefined;
     

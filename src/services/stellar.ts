@@ -19,7 +19,7 @@ export async function getTokenUri(
     fee: '100',
     networkPassphrase: getNetworkPassphrase(network),
   })
-    .addOperation(contract.call('token_uri', nativeToScVal(tokenId, { type: 'u64' })))
+    .addOperation(contract.call('token_uri', nativeToScVal(tokenId, { type: 'u32' })))
     .setTimeout(30)
     .build();
   
@@ -54,7 +54,7 @@ export async function getTokenOwner(
     fee: '100',
     networkPassphrase: getNetworkPassphrase(network),
   })
-    .addOperation(contract.call('owner_of', nativeToScVal(tokenId, { type: 'u64' })))
+    .addOperation(contract.call('owner_of', nativeToScVal(tokenId, { type: 'u32' })))
     .setTimeout(30)
     .build();
   
