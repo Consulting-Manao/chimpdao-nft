@@ -6,6 +6,7 @@ import LandingPage from "@/pages/LandingPage";
 import CollectionPage from "@/pages/CollectionPage";
 import TokenPage from "@/pages/TokenPage";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import OGCard from "@/pages/OGCard";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/og-card" element={<OGCard />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/:contractId" element={<CollectionPage />} />
             <Route path="/:contractId/:tokenId" element={<TokenPage />} />
