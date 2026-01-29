@@ -1,54 +1,114 @@
 
+## Token Details Page Redesign - Proper BAYC Style
 
-## Redesign Token Details Page - BAYC-Inspired Style
+### The Problem
+The current implementation doesn't match the BAYC aesthetic at all. I was too conservative. Looking at the BAYC reference:
+- BAYC uses a **warm brown/tan background** (not black with subtle pattern)
+- The **doodle pattern is clearly visible** in the background
+- Attribute cards are **semi-transparent matching the warm tone**
+- Layout uses **3 columns** for a cleaner look
+- The design has a cohesive warm color palette
 
-### Overview
-Update the token details page to match the BAYC aesthetic with a cleaner, more elegant design. Use the provided doodle pattern as a subtle background element and refine the attribute badge styling.
+### Visual Reference Comparison
+
+**BAYC Style:**
+- Background: Warm brown/tan (~hsl(30 30% 35%))
+- Pattern: Doodle visible at ~10-15% opacity
+- Cards: Semi-transparent brownish cards
+- Token ID: Large "#0" display
+- 3-column attribute grid
+
+**Current ChimpDAO:**
+- Background: Pure black
+- Pattern: Nearly invisible at 3% opacity
+- Cards: Gray glass cards (cold feel)
+- Layout: 2-column grid
 
 ---
 
-### Visual Changes
+### Changes
 
-#### 1. Background Pattern Update
-Replace the current `token-bg-pattern.png` with the new doodle pattern asset (Rectangle-2.png). Apply it with very low opacity (~3%) to create a subtle textured background like BAYC uses.
+#### 1. Token Page Background and Layout (`src/pages/TokenPage.tsx`)
 
-**File**: Copy `user-uploads://Rectangle-2.png` → `public/token-bg-pattern.png`
+Replace the black background with a warm brown background that matches BAYC. Increase pattern visibility and update the layout:
 
-#### 2. Attribute Badge Styling
-Keep the current 2-column layout (works well for your 8 attributes) but refine the styling:
+```tsx
+// New warm background with visible doodle pattern
+<div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
+  {/* Background Pattern - more visible like BAYC */}
+  <div 
+    className="absolute inset-0 opacity-[0.08] pointer-events-none"
+    style={{
+      backgroundImage: 'url(/token-bg-pattern.png)',
+      backgroundSize: '600px',
+      backgroundRepeat: 'repeat'
+    }}
+  />
+  ...
+```
 
-**Current**: `glass-card` with borders
-**New**: Cleaner cards with:
-- Slightly more padding
-- Trait type in small uppercase (keep existing)
-- Value and percentage on same line with proper spacing
-- Percentage shown in lighter text inline with value
+**Layout changes:**
+- Switch to 3-column grid for attributes (like BAYC)
+- Add large token ID display "#0" before attributes
+- Remove the "Details" card header for cleaner look
 
-The MERCH attribute keeps its purple highlighted style with hover glow effects.
+#### 2. Attribute Badge Styling (`src/components/AttributeBadge.tsx`)
+
+Update to match BAYC's warm transparent card style:
+
+```tsx
+// Regular attributes: warm semi-transparent cards
+<div className="rounded-lg p-4 space-y-1 bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)]">
+  {content}
+</div>
+
+// MERCH attribute: keeps purple but with warm undertone
+```
+
+#### 3. Details Section Styling (`src/pages/TokenPage.tsx`)
+
+Update the technical details card to match the warm theme:
+
+```tsx
+<div className="rounded-lg p-4 space-y-3 bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)]">
+```
+
+---
+
+### Color Palette
+
+| Element | Current | New (BAYC-inspired) |
+|---------|---------|---------------------|
+| Page Background | `hsl(0 0% 4%)` | `hsl(30 25% 32%)` |
+| Pattern Opacity | 3% | 8% |
+| Card Background | `hsl(0 0% 25%)` | `hsl(30 15% 28% / 0.6)` |
+| Card Border | `hsl(0 0% 40% / 0.25)` | `hsl(30 15% 40% / 0.3)` |
+| Text | White | White (unchanged) |
 
 ---
 
 ### Files to Modify
 
-**`public/token-bg-pattern.png`**
-- Replace with the new doodle pattern asset
+1. **`src/pages/TokenPage.tsx`**
+   - Add warm background color to page container
+   - Increase pattern opacity from 3% to 8%
+   - Change attribute grid to 3 columns
+   - Add prominent token ID display
+   - Update Details card styling
 
-**`src/components/AttributeBadge.tsx`**
-- Already looks good, minor spacing adjustments if needed
-
-**`src/pages/TokenPage.tsx`**
-- Keep the existing layout (already matches BAYC 2-column approach)
-- Pattern is already applied with 3% opacity - just needs the new image
+2. **`src/components/AttributeBadge.tsx`**
+   - Replace glass-card with warm transparent styling
+   - Keep MERCH purple highlighting
 
 ---
 
 ### Technical Notes
 
-- The new pattern is a lighter, more playful doodle design
-- At 3% opacity, it will be very subtle like the BAYC background
-- No structural changes needed - just swapping the background image asset
-- The current attribute layout and styling already works well
+- Colors are inline for token page only (doesn't affect rest of app)
+- The warm aesthetic is isolated to the token details page
+- MERCH attribute keeps its purple identity
+- Pattern is the doodle asset you provided, just more visible
+- 3-column grid works well for 8 attributes (2 full rows + remainder)
 
 ### Result
-The page will have a cleaner, more refined look with the playful doodle pattern subtly visible in the background, matching the BAYC aesthetic while maintaining the ChimpDAO brand identity.
-
+The token page will have a warm, inviting BAYC-style aesthetic with visible doodle background pattern and cohesive semi-transparent cards.
