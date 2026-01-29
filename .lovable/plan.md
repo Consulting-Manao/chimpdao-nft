@@ -1,70 +1,83 @@
 
 
-## Fix Unclaimed Token Click Behavior
+## Update Smart Contract Types and URI Handling
 
 ### Overview
-Restore navigation for unclaimed tokens so users see the "Token Not Yet Claimed" message, and suppress the gorilla sound for unclaimed tokens only.
-
-### Current Problem
-1. `onClick` is set to `undefined` for unclaimed tokens, preventing navigation to the token page
-2. The gorilla sound still plays because `handleClick` always calls `playGorillaSound()` before checking `onClick`
-3. Users can't see the helpful "unclaimed" message on the TokenPage
-
-### Solution
-Pass a `claimed` prop to NFTCard to control sound behavior, but always allow navigation.
+Update the codebase to use `u32` instead of `u64` for token IDs (matching the updated smart contract), and ensure URI handling is flexible for both `ipfs://` and `https://` formats.
 
 ---
 
 ### Changes
 
-#### `src/components/NFTCard.tsx`
+#### 1. `src/services/stellar.ts`
 
-**1. Add `claimed` prop to interface:**
+Change the token ID type from `u64` to `u32` in both contract call functions:
+
+**Line 22** - `getTokenUri`:
 ```typescript
-interface NFTCardProps {
-  tokenId: number;
-  metadata?: NFTMetadata;
-  imageUrl?: string;
-  isLoading?: boolean;
-  onClick?: () => void;
-  claimed?: boolean; // NEW: controls whether sound plays
+// Before
+.addOperation(contract.call('token_uri', nativeToScVal(tokenId, { type: 'u64' })))
+
+// After
+.addOperation(contract.call('token_uri', nativeToScVal(tokenId, { type: 'u32' })))
+```
+
+**Line 57** - `getTokenOwner`:
+```typescript
+// Before
+.addOperation(contract.call('owner_of', nativeToScVal(tokenId, { type: 'u64' })))
+
+// After
+.addOperation(contract.call('owner_of', nativeToScVal(tokenId, { type: 'u32' })))
+```
+
+#### 2. `src/services/ipfs.ts`
+
+Rename the function and parameter for clarity since URIs can now be either format. The logic stays the same (already handles both):
+
+```typescript
+const IPFS_GATEWAY = 'https://ipfs.io/ipfs/';
+
+/**
+ * Converts any URI to an HTTP URL.
+ * - ipfs:// URIs are converted to gateway URLs
+ * - https:// URLs are returned as-is
+ */
+export function toHttpUrl(uri: string): string {
+  if (uri.startsWith('ipfs://')) {
+    return IPFS_GATEWAY + uri.slice(7);
+  }
+  return uri;
 }
 ```
 
-**2. Update component to only play sound when claimed:**
+Also rename in `fetchNFTMetadata`:
 ```typescript
-export function NFTCard({ tokenId, metadata, imageUrl, isLoading, onClick, claimed = true }: NFTCardProps) {
-  const name = metadata?.name || `Token #${tokenId}`;
-
-  const handleClick = () => {
-    if (claimed) {
-      playGorillaSound();
-    }
-    onClick?.();
-  };
+export async function fetchNFTMetadata(uri: string): Promise<NFTMetadata> {
+  const url = toHttpUrl(uri);
   // ... rest unchanged
 }
 ```
 
-#### `src/pages/CollectionPage.tsx`
+#### 3. Update import usages across files
 
-**Update NFTCard usage to always navigate but pass `claimed` prop:**
-```typescript
-<NFTCard
-  tokenId={token.tokenId}
-  metadata={token.metadata}
-  imageUrl={token.imageUrl}
-  isLoading={token.loading}
-  claimed={token.claimed}
-  onClick={() => navigate(`/${collection.slug}/${token.tokenId}`)}
-/>
-```
+**`src/pages/TokenPage.tsx`**:
+- Update import: `ipfsToHttp` → `toHttpUrl`
+- Update usages (lines 79, 237)
+
+**`src/pages/LandingPage.tsx`**:
+- Update import: `ipfsToHttp` → `toHttpUrl`
+- Update usage (line 35)
+
+**`src/pages/CollectionPage.tsx`**:
+- Update import: `ipfsToHttp` → `toHttpUrl`
+- Update usage (line 75)
 
 ---
 
 ### Technical Notes
-- Navigation always happens (so unclaimed tokens show the "Token Not Yet Claimed" page)
-- Sound only plays for claimed tokens
-- `claimed` defaults to `true` so existing usages don't break
-- TokenPage already handles unclaimed tokens with a user-friendly error message
+- The `u32` type matches the updated smart contract
+- The renamed `toHttpUrl` function is more accurate since it handles any URI format
+- The logic remains unchanged - just semantic improvements for clarity
+- All existing functionality is preserved
 
