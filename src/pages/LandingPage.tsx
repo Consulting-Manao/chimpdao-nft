@@ -66,7 +66,7 @@ export default function LandingPage() {
         <PageHeader
           title="ChimpDAO"
           subtitle="Explore the NFT collections"
-          icon="/icon-nft.png"
+          icon="/monkey-head.png"
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
