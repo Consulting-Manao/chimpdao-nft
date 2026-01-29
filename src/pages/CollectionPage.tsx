@@ -18,6 +18,18 @@ interface TokenData {
   claimed: boolean;
 }
 
+const BackgroundPattern = () => (
+  <div 
+    className="absolute inset-0 opacity-[0.08] pointer-events-none"
+    style={{
+      backgroundImage: 'url(/token-bg-pattern.png)',
+      backgroundSize: '600px',
+      backgroundRepeat: 'repeat'
+    }}
+    aria-hidden="true"
+  />
+);
+
 export default function CollectionPage() {
   const { contractId } = useParams<{ contractId: string }>();
   const navigate = useNavigate();
@@ -120,8 +132,9 @@ export default function CollectionPage() {
   // Show skeleton only if collection lookup is pending (not for token loading)
   if (!collection) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full">
+      <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
+        <BackgroundPattern />
+        <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full relative z-10">
           <PageHeader title="Loading..." showBack />
           <div 
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
@@ -129,7 +142,7 @@ export default function CollectionPage() {
             aria-label="Loading collection"
           >
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="glass-card aspect-square animate-pulse" />
+              <div key={i} className="rounded-lg aspect-square animate-pulse bg-[hsl(30_15%_28%/0.6)]" />
             ))}
           </div>
         </main>
@@ -139,15 +152,15 @@ export default function CollectionPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full">
+    <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
+      <BackgroundPattern />
+      <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full relative z-10">
         <PageHeader
           title={collection.name}
           subtitle={collection.description}
           showBack
           backTo="/"
           backLabel="Back to the jungle"
-          yellowTitle
         />
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
