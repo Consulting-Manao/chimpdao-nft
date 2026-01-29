@@ -8,7 +8,7 @@ import { ErrorState } from '@/components/ErrorState';
 import { Footer } from '@/components/Footer';
 import { getCollectionByContractId, getCollectionBySlug } from '@/config/collections';
 import { getTokenUri, getTokenOwner } from '@/services/stellar';
-import { fetchNFTMetadata, ipfsToHttp, type NFTMetadata } from '@/services/ipfs';
+import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
 
 export default function TokenPage() {
@@ -76,7 +76,7 @@ export default function TokenPage() {
         const meta = await fetchNFTMetadata(uri);
         setMetadata(meta);
         
-        const imgUrl = meta.image ? ipfsToHttp(meta.image) : null;
+        const imgUrl = meta.image ? toHttpUrl(meta.image) : null;
         setImageUrl(imgUrl);
 
         setCache(cacheKey, { metadata: meta, imageUrl: imgUrl, ipfsUri: uri, owner: ownerAddress || undefined });
@@ -234,7 +234,7 @@ export default function TokenPage() {
                     <dt className="text-muted-foreground">IPFS</dt>
                     <dd>
                       <a
-                        href={ipfsToHttp(ipfsUri)}
+                        href={toHttpUrl(ipfsUri)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-primary hover:underline"
