@@ -51,13 +51,22 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full">
+    <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
+      {/* Background Pattern */}
+      <div 
+        className="absolute inset-0 opacity-[0.08] pointer-events-none"
+        style={{
+          backgroundImage: 'url(/token-bg-pattern.png)',
+          backgroundSize: '600px',
+          backgroundRepeat: 'repeat'
+        }}
+        aria-hidden="true"
+      />
+      <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full relative z-10">
         <PageHeader
           title="ChimpDAO"
           subtitle="Explore the NFT collections"
           icon="/icon-nft.png"
-          yellowTitle
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -78,8 +87,8 @@ export default function LandingPage() {
         </div>
 
         {collections.length === 0 && (
-          <div className="glass-card p-12 text-center">
-            <p className="text-muted-foreground">No collections configured</p>
+          <div className="rounded-lg p-12 text-center bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)]">
+            <p className="text-white/60">No collections configured</p>
           </div>
         )}
       </main>

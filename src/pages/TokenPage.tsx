@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ExternalLink } from 'lucide-react';
-import { PageHeader } from '@/components/PageHeader';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { AttributeBadge } from '@/components/AttributeBadge';
 import { CopyButton } from '@/components/CopyButton';
 import { ErrorState } from '@/components/ErrorState';
@@ -12,8 +11,21 @@ import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
 import { getCollectionStats, getTraitRarity } from '@/config/stats';
 
+const BackgroundPattern = () => (
+  <div 
+    className="absolute inset-0 opacity-[0.08] pointer-events-none"
+    style={{
+      backgroundImage: 'url(/token-bg-pattern.png)',
+      backgroundSize: '600px',
+      backgroundRepeat: 'repeat'
+    }}
+    aria-hidden="true"
+  />
+);
+
 export default function TokenPage() {
   const { contractId, tokenId } = useParams<{ contractId: string; tokenId: string }>();
+  const navigate = useNavigate();
   
   const [metadata, setMetadata] = useState<NFTMetadata | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -116,15 +128,23 @@ export default function TokenPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full">
-          <PageHeader title="Loading..." showBack />
+      <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
+        <BackgroundPattern />
+        <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full relative z-10">
+          <button
+            onClick={() => navigate(`/${collection.slug}`)}
+            className="mb-6 inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+            aria-label="Back to collection"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            <span className="text-sm">Back to collection</span>
+          </button>
           <div 
             className="rounded-3xl overflow-hidden max-w-lg mx-auto"
             role="status"
             aria-label="Loading token details"
           >
-            <div className="aspect-square bg-muted animate-pulse" />
+            <div className="aspect-square bg-[hsl(30_15%_28%/0.6)] animate-pulse rounded-3xl" />
           </div>
         </main>
         <Footer />
@@ -148,24 +168,17 @@ export default function TokenPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
-      {/* Background Pattern - BAYC style visible doodle */}
-      <div 
-        className="absolute inset-0 opacity-[0.08] pointer-events-none"
-        style={{
-          backgroundImage: 'url(/token-bg-pattern.png)',
-          backgroundSize: '600px',
-          backgroundRepeat: 'repeat'
-        }}
-        aria-hidden="true"
-      />
+      <BackgroundPattern />
       <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full relative z-10">
-        <PageHeader
-          title={metadata?.name || `Token #${tokenId}`}
-          showBack
-          backTo={`/${collection.slug}`}
-          backLabel="Back to collection"
-          yellowTitle
-        />
+        {/* Back button only - no title in header */}
+        <button
+          onClick={() => navigate(`/${collection.slug}`)}
+          className="mb-6 inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+          aria-label="Back to collection"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          <span className="text-sm">Back to collection</span>
+        </button>
 
         <div className="grid md:grid-cols-2 gap-8 items-stretch">
           {/* Image */}
@@ -177,21 +190,23 @@ export default function TokenPage() {
                 className="w-full h-full object-cover rounded-3xl"
               />
             ) : (
-              <div className="aspect-square flex items-center justify-center bg-muted rounded-3xl" aria-hidden="true">
-                <span className="text-muted-foreground">No image</span>
+              <div className="aspect-square flex items-center justify-center bg-[hsl(30_15%_28%/0.6)] rounded-3xl" aria-hidden="true">
+                <span className="text-white/50">No image</span>
               </div>
             )}
           </div>
 
           {/* Details */}
           <div className="flex flex-col gap-3">
-            {/* Large Token ID Display */}
-            <h2 className="text-4xl font-bold text-white/90">#{tokenIdNum}</h2>
+            {/* Name as h2 */}
+            <h2 className="text-3xl font-bold text-white">
+              {metadata?.name || `Chimp #${tokenIdNum}`}
+            </h2>
             
-            {/* Attributes - 3 column grid like BAYC */}
+            {/* Attributes - responsive grid */}
             {metadata?.attributes && metadata.attributes.length > 0 && (
               <section aria-label="Token attributes">
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                   {metadata.attributes.map((attr, idx) => {
                     const isMerch = attr.trait_type.toUpperCase() === 'MERCH';
                     const stats = collection ? getCollectionStats(collection.slug) : undefined;
@@ -218,34 +233,34 @@ export default function TokenPage() {
               
               <dl className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Contract</dt>
+                  <dt className="text-white/50">Contract</dt>
                   <dd>
                     <CopyButton value={collection.contractId} label={`${collection.contractId.slice(0, 8)}...${collection.contractId.slice(-4)}`} />
                   </dd>
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Owner</dt>
+                  <dt className="text-white/50">Owner</dt>
                   <dd>
                     {ownerLoading ? (
-                      <span className="text-muted-foreground text-xs">Loading...</span>
+                      <span className="text-white/40 text-xs">Loading...</span>
                     ) : owner ? (
                       <CopyButton value={owner} label={`${owner.slice(0, 8)}...${owner.slice(-4)}`} />
                     ) : (
-                      <span className="text-muted-foreground">No owner</span>
+                      <span className="text-white/50">No owner</span>
                     )}
                   </dd>
                 </div>
 
                 {ipfsUri && (
                   <div className="flex items-center justify-between">
-                    <dt className="text-muted-foreground">IPFS</dt>
+                    <dt className="text-white/50">IPFS</dt>
                     <dd>
                       <a
                         href={toHttpUrl(ipfsUri)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-primary hover:underline"
+                        className="inline-flex items-center gap-1 text-white/70 hover:text-white hover:underline"
                         aria-label="View metadata on IPFS (opens in new tab)"
                       >
                         View <ExternalLink className="h-3 w-3" aria-hidden="true" />

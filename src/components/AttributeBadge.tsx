@@ -9,13 +9,13 @@ interface AttributeBadgeProps {
 export function AttributeBadge({ traitType, value, highlighted, link, rarity }: AttributeBadgeProps) {
   const content = (
     <>
-      <p className={`text-xs uppercase tracking-wide ${highlighted ? 'text-white/70' : 'text-muted-foreground'}`}>
+      <p className={`text-[10px] uppercase tracking-wide ${highlighted ? 'text-white/70' : 'text-white/50'}`}>
         {traitType}
       </p>
-      <div className="flex items-baseline gap-2">
-        <p className={`text-sm font-medium ${highlighted ? 'text-white' : ''}`}>{value}</p>
+      <div className="flex items-baseline gap-1.5 min-w-0">
+        <p className={`text-xs font-medium break-words min-w-0 ${highlighted ? 'text-white' : 'text-white/90'}`}>{value}</p>
         {rarity !== undefined && (
-          <span className={`text-xs ${highlighted ? 'text-white/60' : 'text-muted-foreground'}`}>
+          <span className={`text-[10px] flex-shrink-0 ${highlighted ? 'text-white/60' : 'text-white/50'}`}>
             {rarity.toFixed(0)}%
           </span>
         )}
@@ -29,8 +29,7 @@ export function AttributeBadge({ traitType, value, highlighted, link, rarity }: 
         href={link} 
         target="_blank" 
         rel="noopener noreferrer" 
-        style={{ borderRadius: 'var(--radius-lg)' }}
-        className="block p-3 space-y-1 bg-chimp-purple transition-all duration-200 hover:shadow-[0_0_25px_hsl(270_100%_60%/0.5),0_0_50px_hsl(270_100%_60%/0.25)] hover:scale-[1.02] hover:-translate-y-1"
+        className="block p-3 space-y-1 bg-chimp-purple transition-all duration-200 hover:bg-[hsl(270_100%_55%)] hover:scale-[1.02] hover:-translate-y-1"
         aria-label={`${traitType}: ${value} - opens shop in new tab`}
       >
         {content}
@@ -39,7 +38,7 @@ export function AttributeBadge({ traitType, value, highlighted, link, rarity }: 
   }
 
   return (
-    <div className="rounded-lg p-4 space-y-1 bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)]">
+    <div className="rounded-lg p-3 space-y-1 bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)]">
       {content}
     </div>
   );
