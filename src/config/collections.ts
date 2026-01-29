@@ -11,7 +11,7 @@ export const collections: Collection[] = [
   {
     slug: "chi1",
     name: "Palta Chimpy",
-    contractId: "CDCSKCHEMLOIXXYVQHJRGHBIWRPE6MS27MJMTWQF36CUBJDRHFLSWFFD",
+    contractId: "CCW3JUCAQEVNE3W345LKX3SRFCV3L6VYVO7QZWG4VSIXUYXSXT5HBM3U",
     tokenCount: 100,
     description: "A collection of 100 cute Chimpys wearing the PaltaLabs shirt and different accessories.",
   },
