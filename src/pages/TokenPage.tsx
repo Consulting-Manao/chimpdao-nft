@@ -147,13 +147,13 @@ export default function TokenPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative">
-      {/* Background Pattern */}
+    <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
+      {/* Background Pattern - BAYC style visible doodle */}
       <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="absolute inset-0 opacity-[0.08] pointer-events-none"
         style={{
           backgroundImage: 'url(/token-bg-pattern.png)',
-          backgroundSize: '800px',
+          backgroundSize: '600px',
           backgroundRepeat: 'repeat'
         }}
         aria-hidden="true"
@@ -185,10 +185,13 @@ export default function TokenPage() {
 
           {/* Details */}
           <div className="flex flex-col gap-3">
-            {/* Attributes */}
+            {/* Large Token ID Display */}
+            <h2 className="text-4xl font-bold text-white/90">#{tokenIdNum}</h2>
+            
+            {/* Attributes - 3 column grid like BAYC */}
             {metadata?.attributes && metadata.attributes.length > 0 && (
               <section aria-label="Token attributes">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                   {metadata.attributes.map((attr, idx) => {
                     const isMerch = attr.trait_type.toUpperCase() === 'MERCH';
                     const stats = collection ? getCollectionStats(collection.slug) : undefined;
@@ -210,9 +213,8 @@ export default function TokenPage() {
               </section>
             )}
 
-            {/* Technical Info */}
-            <div className="glass-card p-4 space-y-3 flex-1 flex flex-col">
-              <h2 className="text-sm font-medium text-muted-foreground">Details</h2>
+            {/* Technical Info - warm styled */}
+            <div className="rounded-lg p-4 space-y-3 flex-1 flex flex-col bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)]">
               
               <dl className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">

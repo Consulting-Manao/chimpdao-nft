@@ -39,7 +39,7 @@ export function AttributeBadge({ traitType, value, highlighted, link, rarity }: 
   }
 
   return (
-    <div className="glass-card p-3 space-y-1">
+    <div className="rounded-lg p-4 space-y-1 bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)]">
       {content}
     </div>
   );
