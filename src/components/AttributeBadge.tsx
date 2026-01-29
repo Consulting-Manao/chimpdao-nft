@@ -3,15 +3,23 @@ interface AttributeBadgeProps {
   value: string | number;
   highlighted?: boolean;
   link?: string;
+  rarity?: number;
 }
 
-export function AttributeBadge({ traitType, value, highlighted, link }: AttributeBadgeProps) {
+export function AttributeBadge({ traitType, value, highlighted, link, rarity }: AttributeBadgeProps) {
   const content = (
     <>
       <p className={`text-xs uppercase tracking-wide ${highlighted ? 'text-white/70' : 'text-muted-foreground'}`}>
         {traitType}
       </p>
-      <p className={`text-sm font-medium ${highlighted ? 'text-white' : ''}`}>{value}</p>
+      <div className="flex items-baseline gap-2">
+        <p className={`text-sm font-medium ${highlighted ? 'text-white' : ''}`}>{value}</p>
+        {rarity !== undefined && (
+          <span className={`text-xs ${highlighted ? 'text-white/60' : 'text-muted-foreground'}`}>
+            {rarity.toFixed(0)}%
+          </span>
+        )}
+      </div>
     </>
   );
 
