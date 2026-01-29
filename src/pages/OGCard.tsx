@@ -8,10 +8,10 @@ export default function OGCard() {
       >
         {/* Background Pattern */}
         <div 
-          className="absolute inset-0 opacity-[0.08] pointer-events-none"
+          className="absolute inset-0 opacity-[0.15] pointer-events-none"
           style={{
             backgroundImage: 'url(/token-bg-pattern.png)',
-            backgroundSize: '600px',
+            backgroundSize: '400px',
             backgroundRepeat: 'repeat'
           }}
           aria-hidden="true"
@@ -23,17 +23,17 @@ export default function OGCard() {
           <img 
             src="/monkey-head.png" 
             alt="ChimpDAO" 
-            className="w-48 h-48 mb-8"
+            className="w-56 h-56 mb-6"
           />
           
           {/* Title */}
-          <h1 className="text-6xl font-bold text-white mb-4">
-            ChimpDAO NFT
+          <h1 className="text-6xl font-bold text-white mb-3">
+            ChimpDAO
           </h1>
           
           {/* Tagline */}
-          <p className="text-2xl text-white/70">
-            NFC powered NFT collections
+          <p className="text-2xl text-white/60 tracking-wide">
+            NFC-Powered NFTs on Stellar
           </p>
         </div>
       </div>
