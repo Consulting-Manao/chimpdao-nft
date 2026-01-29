@@ -10,6 +10,7 @@ import { getCollectionByContractId, getCollectionBySlug } from '@/config/collect
 import { getTokenUri, getTokenOwner } from '@/services/stellar';
 import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
+import { getCollectionStats, getTraitRarity } from '@/config/stats';
 
 export default function TokenPage() {
   const { contractId, tokenId } = useParams<{ contractId: string; tokenId: string }>();
@@ -190,6 +191,10 @@ export default function TokenPage() {
                 <div className="grid grid-cols-2 gap-3">
                   {metadata.attributes.map((attr, idx) => {
                     const isMerch = attr.trait_type.toUpperCase() === 'MERCH';
+                    const stats = collection ? getCollectionStats(collection.slug) : undefined;
+                    const rarity = !isMerch && stats
+                      ? getTraitRarity(stats, attr.trait_type, attr.value, collection.tokenCount)
+                      : undefined;
                     return (
                       <AttributeBadge
                         key={idx}
@@ -197,6 +202,7 @@ export default function TokenPage() {
                         value={attr.value}
                         highlighted={isMerch}
                         link={isMerch ? `https://shop.chimpdao.xyz/products/${attr.value}` : undefined}
+                        rarity={rarity}
                       />
                     );
                   })}

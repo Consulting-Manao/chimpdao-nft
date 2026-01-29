@@ -1,0 +1,86 @@
+{
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "values": [
+        { "value": "blue", "occurrence": 15 },
+        { "value": "green", "occurrence": 17 },
+        { "value": "grey", "occurrence": 10 },
+        { "value": "orange", "occurrence": 13 },
+        { "value": "pink", "occurrence": 10 },
+        { "value": "purple", "occurrence": 10 },
+        { "value": "weird", "occurrence": 12 },
+        { "value": "white", "occurrence": 13 }
+      ]
+    },
+    {
+      "trait_type": "Pants",
+      "values": [
+        { "value": "blue_jeans", "occurrence": 14 },
+        { "value": "cargo_pants", "occurrence": 11 },
+        { "value": "cyber_pants", "occurrence": 17 },
+        { "value": "grey_jogg", "occurrence": 10 },
+        { "value": "none", "occurrence": 23 },
+        { "value": "pink_panties", "occurrence": 3 },
+        { "value": "red_shorts", "occurrence": 7 },
+        { "value": "white_pants", "occurrence": 7 },
+        { "value": "yellow_panties", "occurrence": 8 }
+      ]
+    },
+    {
+      "trait_type": "Shoes",
+      "values": [
+        { "value": "cyber_boots", "occurrence": 5 },
+        { "value": "flipflops", "occurrence": 9 },
+        { "value": "feet", "occurrence": 26 },
+        { "value": "sneakers_black", "occurrence": 12 },
+        { "value": "sneakers_classic", "occurrence": 17 },
+        { "value": "sneakers_white", "occurrence": 16 },
+        { "value": "ugg", "occurrence": 6 },
+        { "value": "white_slippers", "occurrence": 9 }
+      ]
+    },
+    {
+      "trait_type": "Mouth",
+      "values": [
+        { "value": "cigar", "occurrence": 5 },
+        { "value": "lollipop", "occurrence": 10 },
+        { "value": "none", "occurrence": 63 },
+        { "value": "pizza", "occurrence": 17 },
+        { "value": "respirator", "occurrence": 5 }
+      ]
+    },
+    {
+      "trait_type": "Eyewear",
+      "values": [
+        { "value": "black_glasses", "occurrence": 19 },
+        { "value": "cyber_glasses", "occurrence": 6 },
+        { "value": "monocle", "occurrence": 16 },
+        { "value": "none", "occurrence": 46 },
+        { "value": "white_glasses", "occurrence": 13 }
+      ]
+    },
+    {
+      "trait_type": "Headwear",
+      "values": [
+        { "value": "bob_hat", "occurrence": 11 },
+        { "value": "bonnet", "occurrence": 13 },
+        { "value": "chapka", "occurrence": 5 },
+        { "value": "cowboy_hat", "occurrence": 8 },
+        { "value": "headphones", "occurrence": 7 },
+        { "value": "none", "occurrence": 33 },
+        { "value": "stellar_cap", "occurrence": 17 },
+        { "value": "top_hat", "occurrence": 5 },
+        { "value": "viking_hat", "occurrence": 1 }
+      ]
+    },
+    {
+      "trait_type": "Neck",
+      "values": [
+        { "value": "cross", "occurrence": 5 },
+        { "value": "none", "occurrence": 72 },
+        { "value": "stellar_neck", "occurrence": 23 }
+      ]
+    }
+  ]
+}
