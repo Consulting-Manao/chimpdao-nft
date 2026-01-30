@@ -2,7 +2,7 @@ import chi1Stats from './chi1.json';
 
 export interface TraitValue {
   value: string;
-  occurrence: number;
+  occurrence: number | string;
 }
 
 export interface TraitStats {
@@ -38,5 +38,5 @@ export function getTraitRarity(
   );
   if (!traitValue) return undefined;
 
-  return (traitValue.occurrence / totalTokens) * 100;
+  return (Number(traitValue.occurrence) / totalTokens) * 100;
 }
