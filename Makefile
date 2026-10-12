@@ -49,3 +49,7 @@ deploy-pages: pages-build  ## build the site and publish it to Radicle Pages
 live:  ## whether the published site is the build in dist/
 	@diff <(curl -fsS $(site)) $(build_dir)/index.html \
 		&& echo "live is this build"
+
+.PHONY: og
+og:  ## render the social preview (og/og.html) to public/og.jpg
+	./og/render.sh

@@ -1,0 +1,189 @@
+<!doctype html>
+<!-- Social preview image (1200×630). Rendered to public/og.jpg by `make og`.
+     Same system as chimpdao.xyz's preview (fonts, palette, Chimpy); the cards are real
+     printed designs, so a link to a card or the collection shows what it is. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Luckiest Guy';
+        src: url('fonts/luckiest-guy-latin-400-normal.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Nunito';
+        font-weight: 900;
+        src: url('fonts/nunito-latin-900-normal.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Space Mono';
+        font-weight: 700;
+        src: url('fonts/space-mono-latin-700-normal.woff2') format('woff2');
+      }
+
+      :root {
+        --ink: #201c1a;
+        --paper: #f6efe3;
+        --yellow: #ffd11e;
+        --brown: #5c4b3b;
+        --display: 'Luckiest Guy', sans-serif;
+        --mono: 'Space Mono', monospace;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+      body {
+        position: relative;
+        background: var(--brown);
+        color: var(--paper);
+        font-family: 'Nunito', sans-serif;
+      }
+      .pattern {
+        position: absolute;
+        inset: 0;
+        background: url('art/pattern.png') 0 0 / 520px;
+        opacity: 0.12;
+      }
+      /* Soft yellow glow behind the art */
+      .glow {
+        position: absolute;
+        right: -120px;
+        top: -60px;
+        width: 760px;
+        height: 760px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(255, 209, 30, 0.22), rgba(255, 209, 30, 0));
+      }
+
+      /* ---------- Left: brand, title, URL ---------- */
+      .copy {
+        position: absolute;
+        left: 64px;
+        top: 56px;
+        bottom: 52px;
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .brand img {
+        width: 52px;
+      }
+      .brand > span {
+        font-family: var(--display);
+        font-size: 34px;
+        line-height: 1;
+        padding-top: 6px;
+        color: var(--paper);
+      }
+      .title {
+        margin-top: auto;
+        font-family: var(--display);
+        font-weight: 400;
+        font-size: 92px;
+        line-height: 0.98;
+        letter-spacing: 0.5px;
+        color: var(--paper);
+        text-shadow: 4px 4px 0 var(--ink);
+      }
+      .card-word {
+        display: inline-block;
+        color: var(--yellow);
+        transform: rotate(-5deg) translateY(-2px);
+      }
+      .url {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+      }
+      .url b {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 24px;
+        letter-spacing: 0.5px;
+        background: var(--paper);
+        color: var(--ink);
+        border: 3px solid var(--ink);
+        border-radius: 12px;
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 6px 16px 5px;
+      }
+
+      /* ---------- Right: printed cards, Chimpy ---------- */
+      .card {
+        position: absolute;
+        aspect-ratio: 2022 / 1276;
+        border: 3px solid var(--ink);
+        border-radius: 20px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      .card img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .card--back {
+        left: 818px;
+        top: 48px;
+        width: 310px;
+        transform: rotate(16deg);
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+      .card--mid {
+        left: 762px;
+        top: 96px;
+        width: 340px;
+        transform: rotate(8deg);
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+      .card--front {
+        left: 700px;
+        top: 232px;
+        width: 380px;
+        transform: rotate(-7deg);
+        box-shadow: 7px 7px 0 var(--ink);
+      }
+      .chimpy {
+        position: absolute;
+        right: 22px;
+        bottom: 14px;
+        height: 440px;
+        transform: rotate(4deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pattern"></div>
+    <div class="glow"></div>
+
+    <div class="copy">
+      <div class="brand">
+        <img src="art/monkey-head.png" alt="" />
+        <span>ChimpDAO</span>
+      </div>
+      <h1 class="title">Tap the <span class="card-word">card</span>.<br />See the<br />token.</h1>
+      <div class="url">
+        <b>nft.chimpdao.xyz</b>
+      </div>
+    </div>
+
+    <div class="card card--back"><img src="art/hamac.jpg" alt="" /></div>
+    <div class="card card--mid"><img src="art/avion.jpg" alt="" /></div>
+    <div class="card card--front"><img src="art/chimp-boy.jpg" alt="" /></div>
+
+    <img class="chimpy" src="art/chimpy-hearts.png" alt="" />
+  </body>
+</html>
