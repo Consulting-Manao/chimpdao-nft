@@ -1,4 +1,4 @@
-const CACHE_PREFIX = 'nft_cache_';
+const CACHE_PREFIX = 'nft_cache_v2_';
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
 interface CacheEntry<T> {

@@ -9,7 +9,7 @@ import { FlipCard } from '@/components/FlipCard';
 import { Footer } from '@/components/Footer';
 import { getCardCollection } from '@/config/collections';
 import { loadCardToken, type CardToken } from '@/services/cards';
-import { toCardGatewayUrl } from '@/services/ipfs';
+import { toHttpUrl } from '@/services/ipfs';
 
 type State =
   | { kind: 'loading' }
@@ -131,7 +131,7 @@ export default function CardTokenPage() {
                     <dt className="text-white/50">Metadata</dt>
                     <dd>
                       <a
-                        href={toCardGatewayUrl(token.metadataUri)}
+                        href={toHttpUrl(token.metadataUri)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-white/70 hover:text-white hover:underline"

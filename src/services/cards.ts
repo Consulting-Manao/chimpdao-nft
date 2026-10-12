@@ -1,5 +1,5 @@
 import type { CardCollection } from '@/config/collections';
-import { fetchCardMetadata, toCardGatewayUrl, type NFTMetadata } from '@/services/ipfs';
+import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
 import { getCardOwner, getTokenUri } from '@/services/stellar';
 
 export interface CardToken {
@@ -21,13 +21,13 @@ export async function loadCardToken(
   if (!owner) return null;
 
   const metadataUri = await getTokenUri(collection.contractId, tokenId, collection.network);
-  const metadata = await fetchCardMetadata(metadataUri);
+  const metadata = await fetchNFTMetadata(metadataUri);
   return {
     tokenId,
     owner,
     metadataUri,
     metadata,
-    frontUrl: metadata.image ? toCardGatewayUrl(metadata.image) : undefined,
-    backUrl: metadata.back_image ? toCardGatewayUrl(metadata.back_image) : undefined,
+    frontUrl: metadata.image ? toHttpUrl(metadata.image) : undefined,
+    backUrl: metadata.back_image ? toHttpUrl(metadata.back_image) : undefined,
   };
 }
