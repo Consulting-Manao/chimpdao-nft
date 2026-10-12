@@ -33,7 +33,7 @@ export function Footer() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               <img
-                src="/chimp-joystick.png"
+                src="chimp-joystick.png"
                 alt=""
                 className="w-10 h-10 object-contain"
                 aria-hidden="true"
@@ -69,7 +69,7 @@ export function Footer() {
             >
               <span>Built on</span>
               <img
-                src="/stellar-symbol.png"
+                src="stellar-symbol.png"
                 alt=""
                 className="h-4 w-auto invert opacity-70"
                 aria-hidden="true"
@@ -86,7 +86,7 @@ export function Footer() {
             >
               <span>Funded by</span>
               <img
-                src="/scf-logo.svg"
+                src="scf-logo.svg"
                 alt=""
                 className="h-4 w-auto"
                 aria-hidden="true"

@@ -2,6 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // One build, two homes: the domain root (nft.chimpdao.xyz) and the Radicle Pages
+      // subpath (/chimpdao-nft/). Assets are relative and resolve against this <base>;
+      // the router takes the same prefix from window.__BASE__.
+      (function () {
+        var sub = "/chimpdao-nft";
+        var p = location.pathname;
+        var base = p === sub || p.indexOf(sub + "/") === 0 ? sub + "/" : "/";
+        window.__BASE__ = base;
+        var el = document.createElement("base");
+        el.href = base;
+        document.head.appendChild(el);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/monkey-head.png" type="image/png" />
     <title>ChimpDAO NFT</title>
@@ -11,11 +25,11 @@
     <meta property="og:title" content="ChimpDAO NFT" />
     <meta property="og:description" content="NFC powered NFT collections" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/og-card.png" />
+    <meta property="og:image" content="https://nft.chimpdao.xyz/og-card.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@Chi_m_p" />
-    <meta name="twitter:image" content="/og-card.png" />
+    <meta name="twitter:image" content="https://nft.chimpdao.xyz/og-card.png" />
   </head>
 
   <body>

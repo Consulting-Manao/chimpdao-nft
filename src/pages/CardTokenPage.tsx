@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { AttributeBadge } from '@/components/AttributeBadge';
+import { BackgroundPattern } from '@/components/BackgroundPattern';
 import { CopyButton } from '@/components/CopyButton';
 import { ErrorState } from '@/components/ErrorState';
 import { FlipCard } from '@/components/FlipCard';
@@ -72,6 +73,7 @@ export default function CardTokenPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
+      <BackgroundPattern />
       <main id="main-content" className="flex-1 p-6 max-w-5xl mx-auto w-full relative z-10">
         <button
           onClick={() => navigate(`/${collection.slug}`)}

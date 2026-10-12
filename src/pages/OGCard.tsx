@@ -10,7 +10,7 @@ export default function OGCard() {
         <div 
           className="absolute inset-0 opacity-[0.15] pointer-events-none"
           style={{
-            backgroundImage: 'url(/token-bg-pattern.png)',
+            backgroundImage: 'url(token-bg-pattern.png)',
             backgroundSize: '400px',
             backgroundRepeat: 'repeat'
           }}
@@ -21,7 +21,7 @@ export default function OGCard() {
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Logo */}
           <img 
-            src="/monkey-head.png" 
+            src="monkey-head.png" 
             alt="ChimpDAO" 
             className="w-56 h-56 mb-6"
           />

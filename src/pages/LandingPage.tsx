@@ -56,7 +56,7 @@ export default function LandingPage() {
       <div 
         className="absolute inset-0 opacity-[0.08] pointer-events-none"
         style={{
-          backgroundImage: 'url(/token-bg-pattern.png)',
+          backgroundImage: 'url(token-bg-pattern.png)',
           backgroundSize: '600px',
           backgroundRepeat: 'repeat'
         }}
@@ -66,7 +66,7 @@ export default function LandingPage() {
         <PageHeader
           title="ChimpDAO"
           subtitle="Explore the NFT collections"
-          icon="/monkey-head.png"
+          icon="monkey-head.png"
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

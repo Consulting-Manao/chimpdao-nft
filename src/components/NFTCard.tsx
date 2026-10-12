@@ -10,7 +10,7 @@ interface NFTCardProps {
 }
 
 const playGorillaSound = () => {
-  const audio = new Audio('/sounds/gorilla-chest.m4a');
+  const audio = new Audio('sounds/gorilla-chest.m4a');
   audio.volume = 0.5;
   audio.play().catch(() => {});
 };

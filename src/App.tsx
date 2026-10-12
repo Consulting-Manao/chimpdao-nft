@@ -16,12 +16,19 @@ const App = () => (
       <div className="dark">
         <a
           href="#main-content"
+          onClick={(e) => {
+            // With a <base>, a bare #fragment resolves against it and reloads the page.
+            e.preventDefault();
+            const main = document.getElementById("main-content");
+            main?.setAttribute("tabindex", "-1");
+            main?.focus();
+          }}
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
         >
           Skip to main content
         </a>
         <Toaster position="bottom-right" theme="dark" />
-        <BrowserRouter>
+        <BrowserRouter basename={window.__BASE__.replace(/\/$/, "")}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/og-card" element={<OGCard />} />

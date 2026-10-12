@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { BackgroundPattern } from '@/components/BackgroundPattern';
 import { ErrorState } from '@/components/ErrorState';
 import { Footer } from '@/components/Footer';
 import { PageHeader } from '@/components/PageHeader';
@@ -54,6 +55,7 @@ export default function CardCollectionPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
+      <BackgroundPattern />
       <main id="main-content" className="flex-1 p-6 max-w-7xl mx-auto w-full relative z-10">
         <PageHeader
           title={collection.name}
