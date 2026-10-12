@@ -17,6 +17,9 @@ type State =
   | { kind: 'unminted' }
   | { kind: 'error'; message: string };
 
+/** Redundant with the design's name (`1a` is the prefix of `1a-Hamac`). */
+const HIDDEN_ATTRIBUTES = new Set(['Code']);
+
 const short = (a: string) => `${a.slice(0, 8)}...${a.slice(-4)}`;
 
 /** A token of a card campaign (`CardCollection`): the card as printed, front and back. */
@@ -69,7 +72,9 @@ export default function CardTokenPage() {
   }
 
   const token = state.kind === 'minted' ? state.token : undefined;
-  const attributes = token?.metadata.attributes ?? [];
+  // Older tokens already carry their number in the name ("Palta Chimpy #8").
+  const named = token?.metadata.name?.includes('#') ?? false;
+  const attributes = (token?.metadata.attributes ?? []).filter((a) => !HIDDEN_ATTRIBUTES.has(a.trait_type));
 
   return (
     <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
@@ -95,14 +100,17 @@ export default function CardTokenPage() {
             <FlipCard
               front={token.frontUrl}
               back={token.backUrl}
-              alt={token.metadata.name || `Card #${id}`}
+              alt={named ? token.metadata.name! : `${token.metadata.name || 'Card'} #${id}`}
             />
 
             <div className="flex flex-col gap-3">
               <h2 className="text-3xl font-bold text-white">{token.metadata.name || `Card #${id}`}</h2>
-              {collection.network === 'testnet' && (
-                <p className="text-xs uppercase tracking-wide text-white/60">Stellar testnet</p>
-              )}
+              <p className="text-sm text-white/60">
+                {!named && <>Card #{id}</>}
+                {collection.network === 'testnet' && (
+                  <span className={`text-xs uppercase tracking-wide ${named ? '' : 'ml-2'}`}>Stellar testnet</span>
+                )}
+              </p>
               {token.metadata.description && (
                 <p className="text-sm text-white/70">{token.metadata.description}</p>
               )}

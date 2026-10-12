@@ -1,21 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BackgroundPattern } from '@/components/BackgroundPattern';
 import { ErrorState } from '@/components/ErrorState';
 import { Footer } from '@/components/Footer';
 import { PageHeader } from '@/components/PageHeader';
 import { getCardCollection } from '@/config/collections';
-import { loadCardToken, type CardToken } from '@/services/cards';
+import { groupByDesign, loadCardToken, type CardToken } from '@/services/cards';
 import { getNextTokenId } from '@/services/stellar';
 
-type Slot = { tokenId: number; token?: CardToken; failed?: boolean };
-
-/** The cards minted so far in a card campaign, read from the chain rather than a fixed count. */
+/**
+ * The cards minted so far in a card campaign, read from the chain. Cards of one design are
+ * the same artwork, so they are shown once per design with their numbers listed beneath.
+ */
 export default function CardCollectionPage() {
   const { contractId } = useParams<{ contractId: string }>();
   const navigate = useNavigate();
   const collection = getCardCollection(contractId);
-  const [slots, setSlots] = useState<Slot[] | null>(null);
+  const [minted, setMinted] = useState<number | null>(null);
+  const [tokens, setTokens] = useState<CardToken[]>([]);
+  const [failed, setFailed] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -24,14 +27,14 @@ export default function CardCollectionPage() {
     getNextTokenId(collection.contractId, collection.network).then(
       (next) => {
         if (!live) return;
-        const ids = Array.from({ length: Math.min(next, collection.tokenCount) }, (_, i) => i);
-        setSlots(ids.map((tokenId) => ({ tokenId })));
-        ids.forEach((tokenId) =>
+        const count = Math.min(next, collection.tokenCount);
+        setMinted(count);
+        for (let tokenId = 0; tokenId < count; tokenId++) {
           loadCardToken(collection, tokenId).then(
-            (token) => live && setSlots((s) => s?.map((x) => (x.tokenId === tokenId ? { tokenId, token: token ?? undefined, failed: !token } : x)) ?? s),
-            () => live && setSlots((s) => s?.map((x) => (x.tokenId === tokenId ? { tokenId, failed: true } : x)) ?? s),
-          ),
-        );
+            (token) => live && (token ? setTokens((all) => [...all, token]) : setFailed((n) => n + 1)),
+            () => live && setFailed((n) => n + 1),
+          );
+        }
       },
       (err) => live && setError(err instanceof Error ? err.message : 'Failed to load collection'),
     );
@@ -39,6 +42,8 @@ export default function CardCollectionPage() {
       live = false;
     };
   }, [collection]);
+
+  const { groups, rest } = useMemo(() => groupByDesign(tokens), [tokens]);
 
   if (!collection) {
     return (
@@ -53,6 +58,9 @@ export default function CardCollectionPage() {
     return <ErrorState title="Error loading collection" message={error} action={{ label: 'Go Home', to: '/' }} />;
   }
 
+  const open = (tokenId: number) => navigate(`/${collection.slug}/${tokenId}`);
+  const pending = minted === null ? 0 : minted - tokens.length - failed;
+
   return (
     <div className="min-h-screen flex flex-col relative bg-[hsl(30_25%_32%)]">
       <BackgroundPattern />
@@ -65,39 +73,102 @@ export default function CardCollectionPage() {
           backLabel="Back to the jungle"
         />
 
-        {slots?.length === 0 && (
+        {minted === 0 && (
           <div className="rounded-lg p-12 text-center bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)]">
             <p className="text-white/60">No cards have been issued yet.</p>
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {(slots ?? []).map(({ tokenId, token, failed }) => (
-            <button
-              key={tokenId}
-              onClick={() => navigate(`/${collection.slug}/${tokenId}`)}
-              className="glass-card-hover w-full text-left overflow-hidden group"
-              aria-label={`View details for ${token?.metadata.name ?? `Card #${tokenId}`}`}
+        <div className="space-y-4">
+          {groups.map(({ design, edition, sample, tokens: cards }) => (
+            <section
+              key={design}
+              aria-label={`${design}, ${cards.length} ${cards.length === 1 ? 'card' : 'cards'}`}
+              className="glass-card p-4 grid sm:grid-cols-[minmax(0,320px)_1fr] gap-4 items-start"
             >
-              <div className="aspect-[2022/1276] overflow-hidden bg-muted">
-                {token?.frontUrl ? (
+              <button
+                onClick={() => open(cards[0].tokenId)}
+                className="block w-full overflow-hidden rounded-lg"
+                aria-label={`View ${design} card #${cards[0].tokenId}`}
+              >
+                {sample.frontUrl ? (
                   <img
-                    src={token.frontUrl}
-                    alt={token.metadata.name ?? `Card #${tokenId}`}
-                    className="w-full h-full object-contain"
+                    src={sample.frontUrl}
+                    alt={`${design} card, front`}
+                    className="w-full aspect-[2022/1276] object-contain"
                     loading="lazy"
                   />
                 ) : (
-                  <div className={`w-full h-full flex items-center justify-center ${failed ? '' : 'animate-pulse'}`}>
-                    <span className="text-muted-foreground text-sm">#{tokenId}</span>
-                  </div>
+                  <div className="w-full aspect-[2022/1276] bg-muted" aria-hidden="true" />
                 )}
+              </button>
+              <div className="space-y-3">
+                <div>
+                  <h3 className="text-xl font-semibold">{design}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {edition ? `${edition} edition · ` : ''}
+                    {cards.length} {cards.length === 1 ? 'card' : 'cards'}
+                  </p>
+                </div>
+                {sample.metadata.description && (
+                  <p className="text-sm text-muted-foreground">{sample.metadata.description}</p>
+                )}
+                <ul className="flex flex-wrap gap-2" aria-label={`${design} cards`}>
+                  {cards.map((card) => (
+                    <li key={card.tokenId}>
+                      <button
+                        onClick={() => open(card.tokenId)}
+                        className="rounded-full px-3 py-1 text-sm bg-[hsl(30_15%_28%/0.6)] border border-[hsl(30_15%_40%/0.3)] hover:bg-[hsl(30_15%_34%/0.8)] transition-colors"
+                        aria-label={`View ${design} card #${card.tokenId}`}
+                      >
+                        #{card.tokenId}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="p-3">
-                <p className="text-sm font-medium truncate">{token?.metadata.name ?? `Card #${tokenId}`}</p>
-              </div>
-            </button>
+            </section>
           ))}
+
+          {pending > 0 && (
+            <div
+              className="glass-card h-40 animate-pulse"
+              role="status"
+              aria-label={`Loading ${pending} more ${pending === 1 ? 'card' : 'cards'}`}
+            />
+          )}
+
+          {rest.length > 0 && (
+            <section aria-label="Earlier cards" className="space-y-3 pt-4">
+              <h3 className="text-lg font-semibold text-white/80">Earlier cards</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {rest.map((token) => (
+                  <button
+                    key={token.tokenId}
+                    onClick={() => open(token.tokenId)}
+                    className="glass-card-hover w-full text-left overflow-hidden group"
+                    aria-label={`View details for ${token.metadata.name ?? `Card #${token.tokenId}`}`}
+                  >
+                    <div className="aspect-square overflow-hidden bg-muted">
+                      {token.frontUrl && (
+                        <img
+                          src={token.frontUrl}
+                          alt={token.metadata.name ?? `Card #${token.tokenId}`}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <p className="text-sm font-medium truncate">
+                        {token.metadata.name ?? `Card #${token.tokenId}`}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </main>
       <Footer />
