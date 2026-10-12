@@ -3,8 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "@/pages/LandingPage";
-import CollectionPage from "@/pages/CollectionPage";
-import TokenPage from "@/pages/TokenPage";
+import { CollectionRoute, TokenRoute } from "@/pages/CollectionRoute";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import OGCard from "@/pages/OGCard";
 import NotFound from "@/pages/NotFound";
@@ -27,8 +26,8 @@ const App = () => (
             <Route path="/" element={<LandingPage />} />
             <Route path="/og-card" element={<OGCard />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/:contractId" element={<CollectionPage />} />
-            <Route path="/:contractId/:tokenId" element={<TokenPage />} />
+            <Route path="/:contractId" element={<CollectionRoute />} />
+            <Route path="/:contractId/:tokenId" element={<TokenRoute />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
