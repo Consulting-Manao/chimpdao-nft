@@ -31,7 +31,7 @@ const PrivacyPolicy = () => {
           <article className="space-y-8">
             <header className="space-y-2 mb-12">
               <h1 className="text-3xl font-bold text-white">Privacy Policy - ChimpDAO</h1>
-              <p className="text-white/60">Last Updated: January 2026 • Effective: January 2026</p>
+              <p className="text-white/60">Last Updated: October 2026 • Effective: October 2026</p>
             </header>
 
             <section className="space-y-4">
@@ -40,7 +40,7 @@ const PrivacyPolicy = () => {
                 Consulting Manao GmbH ("Company", "we", "us", "our") operates the ChimpDAO platform, which includes the nft.chimpdao.xyz website ("Website", "Service") and the Chimp iOS application ("App", "Service"). We are committed to protecting your privacy and ensuring transparency about how we collect, use, and protect your personal data in accordance with the General Data Protection Regulation (GDPR) and Austrian data protection laws.
               </p>
               <p className="text-white/70 leading-relaxed">
-                <strong className="text-white">Minimal Data Collection:</strong> Our Services involve minimal personal data collection. We do not operate backend servers or databases for user data storage. All user data is stored locally on your device (browser storage for the Website, iOS Keychain and UserDefaults for the App) or on-chain (Stellar blockchain). We do not use analytics, tracking, or third-party data collection services.
+                <strong className="text-white">Minimal Data Collection:</strong> Our Services involve minimal personal data collection. We do not operate databases for user data storage. All user data is stored locally on your device (browser storage for the Website, UserDefaults for the App) or on-chain (Stellar blockchain). The App holds no private key: the key stays inside your NFC card's chip, and the PIN, where the card has one, is checked by the card. Transactions made with the App pass through our fee-sponsoring service, which adds the network fee signature and cannot authorise a payment. We do not use analytics, tracking, or third-party data collection services.
               </p>
               <p className="text-white/70 leading-relaxed">
                 <strong className="text-white">Contact Information:</strong><br />
@@ -63,10 +63,10 @@ const PrivacyPolicy = () => {
             <section className="space-y-4">
               <h2 className="text-xl font-semibold text-white">3. Types of Data We Collect</h2>
               <p className="text-white/70 leading-relaxed">
-                <strong className="text-white">Important:</strong> We do not operate backend servers or databases for user data storage. All data is either:
+                <strong className="text-white">Important:</strong> We do not operate databases for user data storage. All data is either:
               </p>
               <ul className="list-disc list-inside space-y-2 text-white/70 leading-relaxed ml-4">
-                <li>Stored locally on your device using browser storage (Website) or iOS Keychain (encrypted, device-only) and UserDefaults (local preferences) (App)</li>
+                <li>Stored locally on your device using browser storage (Website) or UserDefaults (local preferences) (App)</li>
                 <li>Stored on-chain via the Stellar blockchain (publicly visible and permanent)</li>
                 <li>Stored on decentralized IPFS networks (publicly accessible for NFT metadata)</li>
               </ul>
@@ -76,8 +76,9 @@ const PrivacyPolicy = () => {
                 <strong className="text-white">Wallet Information:</strong>
               </p>
               <ul className="list-disc list-inside space-y-2 text-white/70 leading-relaxed ml-4">
-                <li>Stellar wallet private keys (stored in browser storage for Website, iOS Keychain for App, encrypted, device-only)</li>
+                <li>Website: Stellar wallet private keys (stored in browser storage, encrypted, device-only). App: none, the key stays inside your NFC card's chip and never reaches the phone</li>
                 <li>Stellar wallet public addresses (stored in browser local storage for Website, UserDefaults for App)</li>
+                <li>App: your first name, card names and colours (stored on your phone only)</li>
                 <li>Wallet connection preferences</li>
               </ul>
               <p className="text-white/70 leading-relaxed mt-4">
@@ -89,7 +90,7 @@ const PrivacyPolicy = () => {
                 <li>Admin mode settings (if applicable, App only)</li>
               </ul>
               <p className="text-white/70 leading-relaxed mt-4">
-                <strong className="text-white">User Responsibility:</strong> You are responsible for ensuring your wallet keys are kept secure. We do not have access to your private keys, which are stored exclusively on your device.
+                <strong className="text-white">User Responsibility:</strong> You are responsible for ensuring your wallet keys are kept secure. We do not have access to your private keys, which stay on your device (Website) or inside your NFC card's chip (App).
               </p>
 
               <h3 className="text-lg font-medium mt-6 text-white">3.2 Data Collected Automatically</h3>
@@ -107,6 +108,7 @@ const PrivacyPolicy = () => {
               </p>
               <ul className="list-disc list-inside space-y-2 text-white/70 leading-relaxed ml-4">
                 <li>Chip public keys (read from NFC chips for authentication)</li>
+                <li>The card's PIN is checked inside the card; the App never sees or stores it</li>
                 <li>Contract IDs embedded in NFC chips</li>
                 <li>Token IDs associated with chips</li>
               </ul>
@@ -122,8 +124,7 @@ const PrivacyPolicy = () => {
               </p>
               <ul className="list-disc list-inside space-y-2 text-white/70 leading-relaxed ml-4">
                 <li><strong className="text-white">Website:</strong> Browser local storage for wallet addresses and preferences</li>
-                <li><strong className="text-white">App (iOS Keychain):</strong> Private keys stored with <code className="text-xs bg-white/10 px-1 py-0.5 rounded">kSecAttrAccessibleWhenUnlockedThisDeviceOnly</code> (encrypted, device-only, never synced)</li>
-                <li><strong className="text-white">App (UserDefaults):</strong> Wallet addresses, network preferences, contract IDs (local device storage, cleared when app is deleted)</li>
+                                <li><strong className="text-white">App (UserDefaults):</strong> Wallet addresses, network preferences, contract IDs, your first name, card names and colours (local device storage, cleared when app is deleted)</li>
               </ul>
               <p className="text-white/70 leading-relaxed mt-4">
                 <strong className="text-white">IPFS Data</strong> (publicly accessible):
@@ -143,6 +144,9 @@ const PrivacyPolicy = () => {
               </p>
               <p className="text-white/70 leading-relaxed">
                 <strong className="text-white">Website Hosting:</strong> Server logs (IP addresses, access timestamps) collected by our hosting provider for operational and security purposes. No persistent tracking or profiling.
+              </p>
+              <p className="text-white/70 leading-relaxed">
+                <strong className="text-white">Fee-Sponsoring Service</strong> (App only): Transactions made with the App pass through our fee-sponsoring service, which adds the network fee signature. It cannot authorise a payment, and it holds no key that can move your funds.
               </p>
               <p className="text-white/70 leading-relaxed">
                 <strong className="text-white">App Distribution</strong> (App only): Apple App Store collects device information for distribution purposes.
@@ -177,7 +181,7 @@ const PrivacyPolicy = () => {
               <ul className="list-disc list-inside space-y-2 text-white/70 leading-relaxed ml-4">
                 <li><strong className="text-white">Wallet Management:</strong> Creating and maintaining your Stellar wallet connection</li>
                 <li><strong className="text-white">NFT Operations:</strong> Facilitating NFT claiming, transferring, minting, and viewing</li>
-                <li><strong className="text-white">NFC Authentication</strong> (App only): Reading NFC chips to authenticate and interact with physical merchandise</li>
+                <li><strong className="text-white">NFC Authentication</strong> (App only): Reading NFC chips to authenticate and interact with physical merchandise and wallet cards</li>
                 <li><strong className="text-white">Blockchain Transactions:</strong> Executing transactions on the Stellar network</li>
                 <li><strong className="text-white">Website Functionality:</strong> Providing website features and content</li>
               </ul>
@@ -205,18 +209,18 @@ const PrivacyPolicy = () => {
                 <li><strong className="text-white">Stellar Network:</strong> Public blockchain for transaction processing</li>
                 <li><strong className="text-white">IPFS Networks:</strong> Decentralized storage for NFT metadata</li>
                 <li><strong className="text-white">Website Hosting:</strong> Hosting provider for website infrastructure (server logs)</li>
+                <li><strong className="text-white">Fee-Sponsoring Service</strong> (App only): Operated by us, relays transactions with the network fee signature</li>
                 <li><strong className="text-white">Apple App Store</strong> (App only): Distribution and device information (collected by Apple)</li>
               </ul>
               <p className="text-white/70 leading-relaxed mt-4">
                 <strong className="text-white">No Data Processing Agreements Required:</strong> We do not share personal data with third-party processors for marketing or analytics. All user data remains on your device or on public blockchains.
               </p>
-              <h3 className="text-lg font-medium mt-4 text-white">6.2 No Backend Data Storage</h3>
+              <h3 className="text-lg font-medium mt-4 text-white">6.2 No Database of User Data</h3>
               <p className="text-white/70 leading-relaxed">
-                We do not store any user data on our own servers. All user data exists on:
+                We do not keep a database of user data. All user data exists on:
               </p>
               <ul className="list-disc list-inside space-y-2 text-white/70 leading-relaxed ml-4">
                 <li>Your device's browser storage (Website)</li>
-                <li>Your device's iOS Keychain (encrypted, device-only) (App)</li>
                 <li>Your device's UserDefaults (local preferences) (App)</li>
                 <li>The Stellar blockchain (permanent, public, immutable)</li>
                 <li>IPFS networks (distributed, public, persistent)</li>
@@ -247,8 +251,8 @@ const PrivacyPolicy = () => {
                 We implement appropriate technical and organizational measures to protect your data:
               </p>
               <ul className="list-disc list-inside space-y-2 text-white/70 leading-relaxed ml-4">
-                <li><strong className="text-white">Encryption:</strong> Private keys stored using secure, encrypted storage (browser storage for Website, iOS Keychain for App)</li>
-                <li><strong className="text-white">No Network Transmission:</strong> Private keys never leave your device</li>
+                <li><strong className="text-white">Key Storage:</strong> On the Website, private keys are stored in encrypted browser storage. In the App, the key never leaves your NFC card's chip</li>
+                <li><strong className="text-white">No Network Transmission:</strong> Private keys never leave your device or your card</li>
                 <li><strong className="text-white">Access Controls:</strong> Limited access to personal data on a need-to-know basis</li>
                 <li><strong className="text-white">Security Monitoring:</strong> Continuous security monitoring and vulnerability assessment</li>
                 <li><strong className="text-white">Incident Response:</strong> Procedures for responding to data breaches and security incidents</li>
@@ -258,7 +262,7 @@ const PrivacyPolicy = () => {
                 You are responsible for:
               </p>
               <ul className="list-disc list-inside space-y-2 text-white/70 leading-relaxed ml-4">
-                <li>Protecting your wallet credentials and private keys</li>
+                <li>Protecting your wallet credentials and private keys, and keeping your NFC card, its PIN and unlock code safe</li>
                 <li>Securing your device and browser</li>
                 <li>Backing up your wallet securely</li>
                 <li>Keeping your software and device up to date</li>
