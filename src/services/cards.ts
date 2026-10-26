@@ -17,10 +17,10 @@ export async function loadCardToken(
   collection: CardCollection,
   tokenId: number,
 ): Promise<CardToken | null> {
-  const owner = await getCardOwner(collection.contractId, tokenId, collection.network);
+  const owner = await getCardOwner(collection.contractId, tokenId);
   if (!owner) return null;
 
-  const metadataUri = await getTokenUri(collection.contractId, tokenId, collection.network);
+  const metadataUri = await getTokenUri(collection.contractId, tokenId);
   const metadata = await fetchNFTMetadata(metadataUri);
   return {
     tokenId,

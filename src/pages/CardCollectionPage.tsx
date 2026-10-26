@@ -24,7 +24,7 @@ export default function CardCollectionPage() {
   useEffect(() => {
     if (!collection) return;
     let live = true;
-    getNextTokenId(collection.contractId, collection.network).then(
+    getNextTokenId(collection.contractId).then(
       (next) => {
         if (!live) return;
         const count = Math.min(next, collection.tokenCount);

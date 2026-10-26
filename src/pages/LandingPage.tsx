@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CollectionCard } from '@/components/CollectionCard';
 import { PageHeader } from '@/components/PageHeader';
 import { Footer } from '@/components/Footer';
-import { collections as legacyCollections, cardCollections, getCardCollection, type Collection } from '@/config/collections';
+import { collections as legacyCollections, cardCollections, type Collection } from '@/config/collections';
 import { getTokenUri } from '@/services/stellar';
 import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
@@ -32,8 +32,7 @@ export default function LandingPage() {
       }
       
       try {
-        const network = getCardCollection(collection.contractId)?.network;
-        const uri = await getTokenUri(collection.contractId, 0, network);
+        const uri = await getTokenUri(collection.contractId, 0);
         const metadata = await fetchNFTMetadata(uri);
         const imageUrl = metadata.image ? toHttpUrl(metadata.image) : undefined;
         

@@ -8,7 +8,6 @@ interface CollectionCardProps {
 }
 
 export const CollectionCard = ({ collection, previewImage, isLoading, onClick }: CollectionCardProps) => {
-  const testnet = 'network' in collection && collection.network === 'testnet';
   return (
     <button
       onClick={onClick}
@@ -33,7 +32,6 @@ export const CollectionCard = ({ collection, previewImage, isLoading, onClick }:
       </div>
       <div className="p-4 space-y-2">
         <h3 className="text-lg font-semibold">{collection.name}</h3>
-        {testnet && <p className="text-xs uppercase tracking-wide text-muted-foreground">Stellar testnet</p>}
         {collection.description && (
           <p className="text-sm text-muted-foreground line-clamp-2">
             {collection.description}

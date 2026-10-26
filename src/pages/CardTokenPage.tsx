@@ -105,12 +105,7 @@ export default function CardTokenPage() {
 
             <div className="flex flex-col gap-3">
               <h2 className="text-3xl font-bold text-white">{token.metadata.name || `Card #${id}`}</h2>
-              <p className="text-sm text-white/60">
-                {!named && <>Card #{id}</>}
-                {collection.network === 'testnet' && (
-                  <span className={`text-xs uppercase tracking-wide ${named ? '' : 'ml-2'}`}>Stellar testnet</span>
-                )}
-              </p>
+              {!named && <p className="text-sm text-white/60">Card #{id}</p>}
               {token.metadata.description && (
                 <p className="text-sm text-white/70">{token.metadata.description}</p>
               )}

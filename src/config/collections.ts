@@ -1,5 +1,3 @@
-import type { Network } from "./networks";
-
 // Static list of known NFT collections
 export interface Collection {
   slug: string;
@@ -30,29 +28,26 @@ export function getCollectionByContractId(contractId: string): Collection | unde
 /**
  * Card campaigns: the `nfc-nft` contracts the terminal's enrolment station mints into.
  *
- * A card's NDEF link is `/<nfc-nft contract>/<token id>` and carries no network, so the
- * network is recorded here. These differ from the collections above in two ways the pages
- * rely on. `mint` binds every token to its card's purse in the same call, so an owner-less
- * id means "not minted yet", never "unclaimed", and there is no special token #0. And a
- * token's metadata is its card design, shared by many cards: no per-trait rarity.
+ * A card's NDEF link is `/<nfc-nft contract>/<token id>`. These differ from the collections
+ * above in two ways the pages rely on. `mint` binds every token to its card's purse in the
+ * same call, so an owner-less id means "not minted yet", never "unclaimed", and there is no
+ * special token #0. And a token's metadata is its card design, shared by many cards: no
+ * per-trait rarity.
  *
- * Not listed on the landing page: a campaign is reached by its card's link until it has a
- * mainnet deployment to advertise. Mirrors `nfcNft` in chimpdao-terminal's
- * `src/chain/contracts.ts`.
+ * `chi1` is also an `nfc-nft` since mainnet's in-place upgrade, but it stays above: it is
+ * a gallery of one-of-a-kind Chimpys, not a print run of designs. Mirrors `nfcNft` in
+ * chimpdao-terminal's `src/chain/contracts.ts`.
  */
-export interface CardCollection extends Collection {
-  network: Network;
-}
+export type CardCollection = Collection;
 
 export const cardCollections: CardCollection[] = [
   {
-    slug: "chi4",
-    name: "ChimpDAO Cards",
-    contractId: "CC6Z7JDXX2RXULI2TMY7OGJJ57WXTBRCQDRR4W4IFEJZZ7SPGCPYJEJT",
-    // `max_tokens`: the ceiling `create_collection` is deployed with.
-    tokenCount: 100,
-    network: "testnet",
-    description: "Tap-to-pay Chimp cards on Stellar testnet. The card is the wallet.",
+    slug: "og",
+    name: "Chimp OG",
+    contractId: "CD6TCEK4DUGLZJ77YGOIVLNHTQ2HDVBULNAX7MOKPMHCPB6LKSDNMEWA",
+    // `max_tokens`: exactly the 195 printed cards.
+    tokenCount: 195,
+    description: "The 195 OG cards: tap-to-pay Chimp cards on Stellar. The card is the wallet.",
   },
 ];
 
