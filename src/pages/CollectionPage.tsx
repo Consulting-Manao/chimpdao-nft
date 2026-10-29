@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { ErrorState } from '@/components/ErrorState';
 import { Footer } from '@/components/Footer';
 import { getCollectionBySlug, getCollectionByContractId, type Collection } from '@/config/collections';
-import { getTokenUri, getTokenOwner } from '@/services/stellar';
+import { getTokenUris } from '@/services/stellar';
 import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
 import { getCached, setCache, getCacheKey } from '@/services/cache';
 
@@ -57,66 +57,62 @@ export default function CollectionPage() {
     setCollection(found);
   }, [contractId]);
 
-  const loadToken = useCallback(async (tokenId: number, contractAddress: string): Promise<TokenData> => {
+  // Minted ids are dense, so the chain is asked once for every minted token's URI and the
+  // rest are placeholders; only the metadata of a minted token costs another request.
+  const loadToken = useCallback(async (tokenId: number, contractAddress: string, uri: string): Promise<TokenData> => {
     const cacheKey = getCacheKey(contractAddress, tokenId);
-    const cached = getCached<{ metadata: NFTMetadata; imageUrl: string; owner?: string }>(cacheKey);
-    
-    // If cached with owner data, use it
-    if (cached && (tokenId === 0 || cached.owner)) {
+    const cached = getCached<{ metadata: NFTMetadata; imageUrl: string }>(cacheKey);
+    if (cached) {
       return { tokenId, metadata: cached.metadata, imageUrl: cached.imageUrl, loading: false, claimed: true };
     }
 
-    // Check ownership for tokens other than #0
-    if (tokenId !== 0) {
-      const owner = await getTokenOwner(contractAddress, tokenId);
-      if (!owner) {
-        // Return placeholder for unclaimed token
-        return { tokenId, loading: false, claimed: false };
-      }
-      
-      // Has owner but no cached metadata - update cache and fetch metadata
-      if (cached) {
-        setCache(cacheKey, { ...cached, owner });
-        return { tokenId, metadata: cached.metadata, imageUrl: cached.imageUrl, loading: false, claimed: true };
-      }
-    }
-
-    // Fetch metadata for claimed tokens
-    const uri = await getTokenUri(contractAddress, tokenId);
     const metadata = await fetchNFTMetadata(uri);
     const imageUrl = metadata.image ? toHttpUrl(metadata.image) : undefined;
-    
-    const owner = tokenId === 0 ? await getTokenOwner(contractAddress, tokenId) : undefined;
-    
-    setCache(cacheKey, { metadata, imageUrl, owner: owner || undefined });
+    setCache(cacheKey, { metadata, imageUrl });
     return { tokenId, metadata, imageUrl, loading: false, claimed: true };
   }, []);
 
   useEffect(() => {
     if (!collection) return;
+    let live = true;
 
     const loadAllTokens = async () => {
-      const tokenIds = Array.from({ length: collection.tokenCount }, (_, i) => i);
-      
-      // Add placeholders
-      setTokens(tokenIds.map(id => ({ tokenId: id, loading: true, claimed: false })));
+      const unminted = (id: number): TokenData => ({ tokenId: id, loading: false, claimed: false });
+      if (live) setTokens(Array.from({ length: collection.tokenCount }, (_, id) => ({ tokenId: id, loading: true, claimed: false })));
+      let uris: string[];
+      try {
+        uris = await getTokenUris(collection.contractId, collection.tokenCount);
+      } catch {
+        if (live) {
+          setTokens(Array.from({ length: collection.tokenCount }, (_, id) => unminted(id)));
+          setLoading(false);
+        }
+        return;
+      }
 
-      // Load all tokens in parallel with error handling per token
-      const results = await Promise.allSettled(
-        tokenIds.map(id => loadToken(id, collection.contractId))
+      // Minted tokens fill in as their metadata arrives
+      const slots: TokenData[] = Array.from({ length: collection.tokenCount }, (_, id) =>
+        id < uris.length ? { tokenId: id, loading: true, claimed: false } : unminted(id)
       );
+      if (live) setTokens([...slots]);
 
-      const allTokens = results.map((result, idx) => 
-        result.status === 'fulfilled' 
-          ? result.value 
-          : { tokenId: idx, loading: false, claimed: false }
+      await Promise.all(
+        uris.map(async (uri, id) => {
+          try {
+            slots[id] = await loadToken(id, collection.contractId, uri);
+          } catch {
+            slots[id] = unminted(id);
+          }
+          if (live) setTokens([...slots]);
+        })
       );
-
-      setTokens(allTokens);
-      setLoading(false);
+      if (live) setLoading(false);
     };
 
     loadAllTokens();
+    return () => {
+      live = false;
+    };
   }, [collection, loadToken]);
 
   if (notFound) {

@@ -28,11 +28,21 @@ export interface NFTMetadata {
   [key: string]: unknown;
 }
 
-export async function fetchNFTMetadata(uri: string): Promise<NFTMetadata> {
+// Cards of one design share a metadata file, so a campaign of 195 cards asks the gateway
+// for a handful of files, not 195. The promise is shared while the request is in flight and
+// after it succeeds; a failure is dropped so the next ask tries again.
+const metadataRequests = new Map<string, Promise<NFTMetadata>>();
+
+export function fetchNFTMetadata(uri: string): Promise<NFTMetadata> {
   const url = toHttpUrl(uri);
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch metadata: ${response.status}`);
+  let request = metadataRequests.get(url);
+  if (!request) {
+    request = fetch(url).then((response) => {
+      if (!response.ok) throw new Error(`Failed to fetch metadata: ${response.status}`);
+      return response.json() as Promise<NFTMetadata>;
+    });
+    request.catch(() => metadataRequests.delete(url));
+    metadataRequests.set(url, request);
   }
-  return response.json();
+  return request;
 }

@@ -1,15 +1,26 @@
 import type { CardCollection } from '@/config/collections';
 import { fetchNFTMetadata, toHttpUrl, type NFTMetadata } from '@/services/ipfs';
-import { getCardOwner, getTokenUri } from '@/services/stellar';
+import { getCardOwner, getTokenUri, getTokenUris } from '@/services/stellar';
 
 export interface CardToken {
   tokenId: number;
-  /** The card's purse. */
-  owner: string;
+  /** The card's purse. Only read when a single token is loaded; a collection skips it. */
+  owner?: string;
   metadataUri: string;
   metadata: NFTMetadata;
   frontUrl?: string;
   backUrl?: string;
+}
+
+async function describe(tokenId: number, metadataUri: string): Promise<CardToken> {
+  const metadata = await fetchNFTMetadata(metadataUri);
+  return {
+    tokenId,
+    metadataUri,
+    metadata,
+    frontUrl: metadata.image ? toHttpUrl(metadata.image) : undefined,
+    backUrl: metadata.back_image ? toHttpUrl(metadata.back_image) : undefined,
+  };
 }
 
 /** `null` when the token has not been minted; throws when the chain or gateway cannot answer. */
@@ -20,16 +31,22 @@ export async function loadCardToken(
   const owner = await getCardOwner(collection.contractId, tokenId);
   if (!owner) return null;
 
-  const metadataUri = await getTokenUri(collection.contractId, tokenId);
-  const metadata = await fetchNFTMetadata(metadataUri);
-  return {
-    tokenId,
-    owner,
-    metadataUri,
-    metadata,
-    frontUrl: metadata.image ? toHttpUrl(metadata.image) : undefined,
-    backUrl: metadata.back_image ? toHttpUrl(metadata.back_image) : undefined,
-  };
+  const token = await describe(tokenId, await getTokenUri(collection.contractId, tokenId));
+  return { ...token, owner };
+}
+
+/**
+ * Every minted token of a campaign, `onToken` called as each one's metadata arrives. The
+ * chain is asked once for all the URIs (`getTokenUris`) and ids are dense, so a URI is a
+ * minted token; the owner is not read.
+ */
+export async function loadCardTokens(
+  collection: CardCollection,
+  onToken: (token: CardToken | null) => void,
+): Promise<number> {
+  const uris = await getTokenUris(collection.contractId, collection.tokenCount);
+  uris.forEach((uri, tokenId) => describe(tokenId, uri).then(onToken, () => onToken(null)));
+  return uris.length;
 }
 
 function attribute(token: CardToken, traitType: string): string | undefined {

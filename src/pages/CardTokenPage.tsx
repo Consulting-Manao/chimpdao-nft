@@ -126,10 +126,12 @@ export default function CardTokenPage() {
                     <dt className="text-white/50">Contract</dt>
                     <dd><CopyButton value={collection.contractId} label={short(collection.contractId)} /></dd>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <dt className="text-white/50">Purse</dt>
-                    <dd><CopyButton value={token.owner} label={short(token.owner)} /></dd>
-                  </div>
+                  {token.owner && (
+                    <div className="flex items-center justify-between">
+                      <dt className="text-white/50">Purse</dt>
+                      <dd><CopyButton value={token.owner} label={short(token.owner)} /></dd>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between">
                     <dt className="text-white/50">Metadata</dt>
                     <dd>

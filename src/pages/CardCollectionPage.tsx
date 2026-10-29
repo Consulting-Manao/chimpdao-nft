@@ -5,8 +5,7 @@ import { ErrorState } from '@/components/ErrorState';
 import { Footer } from '@/components/Footer';
 import { PageHeader } from '@/components/PageHeader';
 import { getCardCollection } from '@/config/collections';
-import { groupByDesign, loadCardToken, type CardToken } from '@/services/cards';
-import { getNextTokenId } from '@/services/stellar';
+import { groupByDesign, loadCardTokens, type CardToken } from '@/services/cards';
 
 /**
  * The cards minted so far in a card campaign, read from the chain. Cards of one design are
@@ -24,18 +23,12 @@ export default function CardCollectionPage() {
   useEffect(() => {
     if (!collection) return;
     let live = true;
-    getNextTokenId(collection.contractId).then(
-      (next) => {
-        if (!live) return;
-        const count = Math.min(next, collection.tokenCount);
-        setMinted(count);
-        for (let tokenId = 0; tokenId < count; tokenId++) {
-          loadCardToken(collection, tokenId).then(
-            (token) => live && (token ? setTokens((all) => [...all, token]) : setFailed((n) => n + 1)),
-            () => live && setFailed((n) => n + 1),
-          );
-        }
-      },
+    loadCardTokens(collection, (token) => {
+      if (!live) return;
+      if (token) setTokens((all) => [...all, token]);
+      else setFailed((n) => n + 1);
+    }).then(
+      (count) => live && setMinted(count),
       (err) => live && setError(err instanceof Error ? err.message : 'Failed to load collection'),
     );
     return () => {
