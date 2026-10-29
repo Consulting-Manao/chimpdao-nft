@@ -1,8 +1,24 @@
 import { Link } from 'react-router-dom';
 
-const GithubIcon = ({ className }: { className?: string }) => (
+const RadicleIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className || "w-5 h-5"} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="2.5" />
+    <circle cx="12" cy="12" r="6" />
+    <circle cx="12" cy="12" r="9.5" />
+  </svg>
+);
+
+const AppleIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className || "w-5 h-5"} fill="currentColor">
-    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+    <path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45z" />
+  </svg>
+);
+
+const GlobeIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className || "w-5 h-5"} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M2 12h20" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
   </svg>
 );
 
@@ -18,8 +34,12 @@ const DiscordIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const IOS_APP_URL = "https://apps.apple.com/fr/app/chimpdao/id6757618362";
+
 const socialLinks = [
-  { label: "GitHub", href: "https://github.com/orgs/Consulting-Manao/repositories", icon: GithubIcon },
+  { label: "ChimpDAO", href: "https://chimpdao.xyz", icon: GlobeIcon },
+  { label: "iOS app", href: IOS_APP_URL, icon: AppleIcon },
+  { label: "Radicle", href: "https://radicle.network/nodes/radicle.consulting-manao.com/", icon: RadicleIcon },
   { label: "X", href: "https://x.com/Chi_m_p", icon: XIcon },
   { label: "Discord", href: "https://discord.gg/Uvvk2kMtJw", icon: DiscordIcon },
 ];
